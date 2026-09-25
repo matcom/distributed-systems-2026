@@ -1,0 +1,75 @@
+name: Deploy static course
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Stage verified publication files
+        shell: python
+        run: |
+          import hashlib
+          import json
+          import pathlib
+          import shutil
+
+          root = pathlib.Path.cwd().resolve()
+          target = root / "_pages"
+          target.mkdir()
+
+          manifest = json.loads((root / ".release-files.json").read_text())
+          files = manifest["files"]
+
+          for name, expected in files.items():
+              relative = pathlib.PurePosixPath(name)
+              assert not relative.is_absolute(), name
+              assert ".." not in relative.parts, name
+
+              source = (root / relative).resolve()
+              assert source.is_relative_to(root), name
+              assert source.is_file() and not source.is_symlink(), name
+
+              digest = hashlib.sha256(source.read_bytes()).hexdigest()
+              assert digest == expected, name
+
+              destination = target / relative
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(source, destination)
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _pages
+
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img">
+  <style>
+    .t{font:600 22px system-ui,sans-serif;fill:#102a3a}.s{font:500 17px system-ui,sans-serif;fill:#526570}
+    .m{font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#0a6074;letter-spacing:.03em}
+    .box{fill:#fff;stroke:#9fb0b9;stroke-width:2}.soft{fill:#f5f8f9;stroke:#cbd6db;stroke-width:2}
+    .accent{fill:#e3f1f4;stroke:#0a6074;stroke-width:2.5}.line{stroke:#516a76;stroke-width:3;fill:none}
+    .dash{stroke:#8ba0aa;stroke-width:3;stroke-dasharray:10 9;fill:none}.teal{stroke:#0a6074;stroke-width:4;fill:none}
+    .bad{stroke:#8a4f4f;stroke-width:3;fill:none;stroke-dasharray:8 7}.dot{fill:#0a6074}.node{fill:#fff;stroke:#102a3a;stroke-width:3}
+  </style><rect width="960" height="480" fill="#fff"/>
+    <text x="60" y="48" class="m">LÍMITES DE FALLO EN CAPAS</text>
+    <rect x="70" y="70" width="820" height="345" rx="22" class="soft"/>
+    <text x="105" y="108" class="t">Host</text>
+    <rect x="120" y="125" width="720" height="245" rx="20" class="accent"/>
+    <text x="150" y="162" class="t">Contenedor / límite de servicio</text>
+    <rect x="175" y="185" width="610" height="135" rx="18" class="box"/>
+    <text x="210" y="220" class="t">Proceso</text>
+    <circle cx="330" cy="270" r="25" class="node"/><circle cx="430" cy="270" r="25" class="node"/><circle cx="530" cy="270" r="25" class="node"/>
+    <text x="330" y="276" text-anchor="middle" class="m">T1</text><text x="430" y="276" text-anchor="middle" class="m">T2</text><text x="530" y="276" text-anchor="middle" class="m">T3</text>
+    <path d="M355 270 H405 M455 270 H505" class="line"/>
+    <text x="640" y="258" class="s">memoria compartida</text>
+    <text x="640" y="286" class="s">un fallo de proceso</text>
+    <text x="90" y="448" class="m">ERROR DE HILO ⊂ FALLO DE PROCESO ⊂ FALLO DE CONTENEDOR/HOST</text>
+  </svg>

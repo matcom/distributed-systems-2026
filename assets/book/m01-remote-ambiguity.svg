@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img">
+  <style>
+    .t{font:600 22px system-ui,sans-serif;fill:#102a3a}.s{font:500 17px system-ui,sans-serif;fill:#526570}
+    .m{font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#0a6074;letter-spacing:.03em}
+    .box{fill:#fff;stroke:#9fb0b9;stroke-width:2}.soft{fill:#f5f8f9;stroke:#cbd6db;stroke-width:2}
+    .accent{fill:#e3f1f4;stroke:#0a6074;stroke-width:2.5}.line{stroke:#516a76;stroke-width:3;fill:none}
+    .dash{stroke:#8ba0aa;stroke-width:3;stroke-dasharray:10 9;fill:none}.teal{stroke:#0a6074;stroke-width:4;fill:none}
+    .bad{stroke:#8a4f4f;stroke-width:3;fill:none;stroke-dasharray:8 7}.dot{fill:#0a6074}.node{fill:#fff;stroke:#102a3a;stroke-width:3}
+  </style><rect width="960" height="480" fill="#fff"/>
+    <text x="70" y="48" class="m">CLIENT OBSERVATION</text>
+    <rect x="55" y="70" width="190" height="350" rx="18" class="accent"/>
+    <text x="150" y="115" text-anchor="middle" class="t">Client</text>
+    <text x="150" y="160" text-anchor="middle" class="s">send R7</text>
+    <text x="150" y="375" text-anchor="middle" class="t">TIMEOUT</text>
+    <text x="355" y="48" class="m">COMPATIBLE REMOTE HISTORIES</text>
+    <rect x="335" y="70" width="565" height="95" rx="14" class="soft"/>
+    <text x="365" y="105" class="t">A</text><text x="410" y="105" class="s">request never arrives</text>
+    <path d="M245 145 C300 145 300 115 335 115" class="bad"/>
+    <rect x="335" y="190" width="565" height="95" rx="14" class="soft"/>
+    <text x="365" y="225" class="t">B</text><text x="410" y="225" class="s">server applies R7; reply is lost</text>
+    <path d="M245 205 C285 205 300 225 335 225" class="teal"/><path d="M335 250 C300 250 285 280 245 280" class="bad"/>
+    <rect x="335" y="310" width="565" height="95" rx="14" class="soft"/>
+    <text x="365" y="345" class="t">C</text><text x="410" y="345" class="s">server applies R7; reply is only delayed</text>
+    <path d="M245 325 C285 325 300 345 335 345" class="teal"/><path d="M335 380 C300 380 285 390 245 390" class="dash"/>
+    <text x="618" y="445" text-anchor="middle" class="m">SAME LOCAL SYMPTOM ≠ SAME REMOTE TRUTH</text>
+  </svg>

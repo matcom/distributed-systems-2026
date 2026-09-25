@@ -1,0 +1,465 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-g5ptsecz"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Communication II — Messaging, Dissemination, and Overlays — Laboratory | Distributed Systems 2026</title><link rel="canonical" href="https://matcom.github.io/distributed-systems-2026/generated/m12-dht-gossip/lab/"/><link rel="alternate" hreflang="en" href="https://matcom.github.io/distributed-systems-2026/generated/m12-dht-gossip/lab/"/><link rel="alternate" hreflang="es" href="https://matcom.github.io/distributed-systems-2026/es/generated/m12-dht-gossip/lab/"/><link rel="alternate" hreflang="x-default" href="https://matcom.github.io/distributed-systems-2026/generated/m12-dht-gossip/lab/"/><link rel="sitemap" href="/distributed-systems-2026/sitemap-index.xml"/><link rel="shortcut icon" href="/distributed-systems-2026/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.3.2"/><meta name="generator" content="Starlight v0.42.0"/><meta property="og:title" content="Communication II — Messaging, Dissemination, and Overlays — Laboratory"/><meta property="og:type" content="article"/><meta property="og:url" content="https://matcom.github.io/distributed-systems-2026/generated/m12-dht-gossip/lab/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Required laboratory for Communication II — Messaging, Dissemination, and Overlays."/><meta property="og:site_name" content="Distributed Systems 2026"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Required laboratory for Communication II — Messaging, Dissemination, and Overlays."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/distributed-systems-2026/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/distributed-systems-2026/_astro/index.BEMFnyg8.css"><script type="module" src="/distributed-systems-2026/_astro/page.Dwipeu-R.js"></script></head><body class="astro-g5ptsecz"><a class="sl-skip-link astro-qb7clj6f" href="#_top">Skip to content</a><div class="page sl-flex astro-yntsjkba"><header class="header astro-yntsjkba"><div class="header astro-by6fddyj"><div class="title-wrapper sl-flex astro-by6fddyj"><a class="uh-brand astro-sihtrrup" href="/distributed-systems-2026/" aria-label="Distributed Systems 2026 home"><img src="/distributed-systems-2026/assets/uh-logo.jpg" alt="" width="128" height="171" decoding="async" class="astro-sihtrrup"><span class="uh-brand-copy astro-sihtrrup"><strong class="astro-sihtrrup">Universidad de La Habana</strong><span class="uh-brand-context uh-brand-context-full astro-sihtrrup">Facultad de Matemática y Computación · Distributed Systems 2026</span><span class="uh-brand-context uh-brand-context-compact astro-sihtrrup">MatCom · Distributed Systems 2026</span></span></a></div><div class="sl-flex print:hidden astro-by6fddyj"><site-search class="astro-by6fddyj astro-b5kgnn7o" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-b5kgnn7o"><svg aria-hidden="true" class="astro-b5kgnn7o astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-b5kgnn7o" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-b5kgnn7o" style="display: none;"><kbd class="astro-b5kgnn7o">Ctrl</kbd><kbd class="astro-b5kgnn7o">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-b5kgnn7o"><div class="dialog-frame sl-flex astro-b5kgnn7o"><button data-close-modal class="sl-flex md:sl-hidden astro-b5kgnn7o">Cancel</button><div class="search-container astro-b5kgnn7o"><div id="starlight__search" class="astro-b5kgnn7o"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/distributed-systems-2026/_astro/Search.astro_astro_type_script_index_0_lang.Coa9acBV.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-by6fddyj"><div class="sl-flex social-icons astro-by6fddyj"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Dark</option><option value="light" class="astro-2z5xp7gb">Light</option><option value="auto" selected class="astro-2z5xp7gb">Auto</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select language</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/generated/m12-dht-gossip/lab/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/generated/m12-dht-gossip/lab/" class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-yntsjkba" aria-label="Main"><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden astro-r2osgdlg"><svg aria-hidden="true" class="open-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only astro-r2osgdlg">Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super(),matchMedia(`(min-width: 50em)`).addEventListener(`change`,()=>this.hidePopover()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane astro-yntsjkba"><div class="sidebar-content sl-flex astro-yntsjkba"><sl-sidebar-state-persist data-hash="12m8ezn" class="astro-ipdry5cl"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-rmhv4bp6"><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Course</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/modules/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Contents</span></a></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Warm-up</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m00-tooling/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Warm-up · Laboratory Bootcamp</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part I — Foundations and Architecture</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m01-distributed-systems/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 1 · Thinking in Distributed Systems</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m02-ray-middleware/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 2 · Architectures and Middleware</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m05-processes-concurrency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 3 · Processes, Virtualization &amp; Distributed Execution</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part II — Communication and Coordination</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m03-rpc/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 4 · Communication I — RPC &amp; Remote Failure</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m12-dht-gossip/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 5 · Communication II — Messaging &amp; Dissemination</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m06-time-causality/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 6 · Coordination I — Time &amp; Causality</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m09-consensus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 7 · Coordination II — Elections &amp; Agreement</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part III — Naming and Replicated State</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m04-architecture-discovery/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 8 · Naming, Discovery &amp; Decentralized Lookup</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m08-replication-consistency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 9 · Replication &amp; Consistency</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part IV — Fault Tolerance</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m07-failures/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 10 · Failure Models, Resilience &amp; Recovery</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m11-transactions-sharding/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 11 · Transactions, Recovery &amp; Distributed State</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part V — Security and Operations</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m15-security-byzantine/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 12 · Security, Trust &amp; Operating Distributed Systems</span></a></li></ul></details></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Explore</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="7"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/history/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">History of Distributed Systems</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/curiosity/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Curiosities</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Final Project</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="8"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/methodology/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Methodology</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">20 Project Topics</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/trademarks/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Third-party references</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Course &amp; Practice</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="9"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/schedule/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Schedule</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/syllabus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Course information</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/tools/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Course tools &amp; offline environment</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/labs/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Laboratory index</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/labs/scenarios/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Fault &amp; workload scenarios</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/toolbox/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Distributed systems toolbox</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/references/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Reference library</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/resources/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Practice resources</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-p4azlveh"><div class="social-icons astro-p4azlveh"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Dark</option><option value="light" class="astro-2z5xp7gb">Light</option><option value="auto" selected class="astro-2z5xp7gb">Auto</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select language</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/generated/m12-dht-gossip/lab/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/generated/m12-dht-gossip/lab/" class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-yntsjkba"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-lrzkfocr"><aside class="right-sidebar-container print:hidden astro-lrzkfocr"><div class="right-sidebar astro-lrzkfocr"><div class="lg:sl-hidden astro-qok35upx"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-66cqc7ze"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-66cqc7ze"><details id="starlight__mobile-toc" class="astro-66cqc7ze"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-66cqc7ze"><span class="toggle sl-flex astro-66cqc7ze">On this page<svg aria-hidden="true" class="caret astro-66cqc7ze astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-66cqc7ze"></span></summary><div class="dropdown astro-66cqc7ze"><ul class="isMobile astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Overview</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#target" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Target</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#main-question" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Main question</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#required-part-0--compare-communication-semantics" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Required Part 0 — compare communication semantics</span></a><ul class="isMobile astro-jugkfwgx" style="--depth: 1;"><li style="--depth: 1;" class="astro-jugkfwgx"><a href="#direct-requestresponse" style="--depth: 1;" class="astro-jugkfwgx"><span style="--depth: 1;" class="astro-jugkfwgx">Direct request/response</span></a></li><li style="--depth: 1;" class="astro-jugkfwgx"><a href="#asynchronous-delivery" style="--depth: 1;" class="astro-jugkfwgx"><span style="--depth: 1;" class="astro-jugkfwgx">Asynchronous delivery</span></a></li></ul></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#common-baseline--registry-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Common baseline — registry model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a1-identifier-space" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A1. Identifier space</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a2-ownership-rule" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A2. Ownership rule</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a3-static-lookup-baseline" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A3. Static lookup baseline</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a4-routing-shortcuts" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A4. Routing shortcuts</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a5-node-join" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A5. Node join</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a6-graceful-leave" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A6. Graceful leave</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a7-crash-departure" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A7. Crash departure</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a8-stale-route-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A8. Stale route experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a9-churn-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A9. Churn experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a10-optional-replication-extension" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A10. Optional replication extension</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b1-initial-membership" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B1. Initial membership</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b2-gossip-dissemination" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B2. Gossip dissemination</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b3-convergence-baseline" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B3. Convergence baseline</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b4-message-loss" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B4. Message loss</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b5-member-failure" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B5. Member failure</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b6-indirect-evidence" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B6. Indirect evidence</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b7-incarnation-refutation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B7. Incarnation refutation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b8-partition-and-heal" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B8. Partition and heal</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b9-churn-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B9. Churn experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b10-optional-payload-extension" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B10. Optional payload extension</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#finish-the-chapter" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Finish the chapter</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/distributed-systems-2026/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-qok35upx"><div class="sl-container astro-qok35upx"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Overview</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#target" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Target</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#main-question" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Main question</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#required-part-0--compare-communication-semantics" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Required Part 0 — compare communication semantics</span></a><ul class="astro-jugkfwgx" style="--depth: 1;"><li style="--depth: 1;" class="astro-jugkfwgx"><a href="#direct-requestresponse" style="--depth: 1;" class="astro-jugkfwgx"><span style="--depth: 1;" class="astro-jugkfwgx">Direct request/response</span></a></li><li style="--depth: 1;" class="astro-jugkfwgx"><a href="#asynchronous-delivery" style="--depth: 1;" class="astro-jugkfwgx"><span style="--depth: 1;" class="astro-jugkfwgx">Asynchronous delivery</span></a></li></ul></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#common-baseline--registry-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Common baseline — registry model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a1-identifier-space" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A1. Identifier space</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a2-ownership-rule" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A2. Ownership rule</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a3-static-lookup-baseline" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A3. Static lookup baseline</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a4-routing-shortcuts" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A4. Routing shortcuts</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a5-node-join" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A5. Node join</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a6-graceful-leave" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A6. Graceful leave</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a7-crash-departure" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A7. Crash departure</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a8-stale-route-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A8. Stale route experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a9-churn-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A9. Churn experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#a10-optional-replication-extension" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">A10. Optional replication extension</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b1-initial-membership" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B1. Initial membership</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b2-gossip-dissemination" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B2. Gossip dissemination</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b3-convergence-baseline" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B3. Convergence baseline</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b4-message-loss" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B4. Message loss</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b5-member-failure" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B5. Member failure</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b6-indirect-evidence" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B6. Indirect evidence</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b7-incarnation-refutation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B7. Incarnation refutation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b8-partition-and-heal" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B8. Partition and heal</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b9-churn-experiment" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B9. Churn experiment</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#b10-optional-payload-extension" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">B10. Optional payload extension</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#finish-the-chapter" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Finish the chapter</span></a></li></ul></nav></starlight-toc><script type="module" src="/distributed-systems-2026/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-lrzkfocr"><main data-pagefind-body class="astro-g5ptsecz" lang="en" dir="ltr"><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><h1 id="_top" class="astro-bebwqqxs">Communication II — Messaging, Dissemination, and Overlays — Laboratory</h1></div></div><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><div class="sl-markdown-content"><div class="ds-lesson-banner">
+  <div><span>Required laboratory</span><strong>Chapter 5</strong></div>
+  <div><span>Evidence model</span><strong>predict → run → observe → explain</strong></div>
+  <div><span>Verification</span><strong>9 transparent public tests + evidence</strong></div>
+</div>
+<div class="ds-progress" aria-label="Course progress">
+  <div class="ds-progress-meta">
+    <span>Chapter 5 of 12</span>
+    <span>42% through the course sequence</span>
+  </div>
+  <div class="ds-progress-track"><span style="width: 42%"></span></div>
+</div>
+<p class="ds-back-link"><a href="../quick-check/">← Return to knowledge check</a></p>
+<blockquote>
+<p><strong>Before you start:</strong> Complete the guided-practice and knowledge-check steps. You should already be able to state a prediction and name the evidence that would support or contradict it. If not, <a href="../quick-check/">return to the knowledge check</a> and revisit the lesson where needed.</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="target">Target</h2><a class="sl-anchor-link" href="#target"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Target”</span></a></div>
+<p>Compare centralized discovery with decentralized partial knowledge, then implement and evaluate <strong>one</strong> of two tracks:</p>
+<ul>
+<li><strong>Track A — structured DHT lookup/placement</strong>, or</li>
+<li><strong>Track B — gossip membership/dissemination</strong>.</li>
+</ul>
+<p>This lab is Ray-free.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="main-question">Main question</h2><a class="sl-anchor-link" href="#main-question"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Main question”</span></a></div>
+<blockquote>
+<p>What information can each node know locally, how does that information become stale, and what maintenance work is required so the system still delivers information, locates peers/data, or converges membership under churn?</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="required-part-0--compare-communication-semantics">Required Part 0 — compare communication semantics</h2><a class="sl-anchor-link" href="#required-part-0--compare-communication-semantics"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Required Part 0 — compare communication semantics”</span></a></div>
+<p>Before choosing a decentralized track, trace the same logical update through two communication models.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="direct-requestresponse">Direct request/response</h3><a class="sl-anchor-link" href="#direct-requestresponse"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Direct request/response”</span></a></div>
+<p>Use a small local request/response path:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>producer → receiver → response</span></span></code></pre>
+<p>Record what the producer knows after a successful response and what becomes ambiguous after a timeout.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="asynchronous-delivery">Asynchronous delivery</h3><a class="sl-anchor-link" href="#asynchronous-delivery"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Asynchronous delivery”</span></a></div>
+<p>Model or implement a minimal local queue/mailbox:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>producer → durable/pending message → consumer → acknowledgement</span></span></code></pre>
+<p>You do not need RabbitMQ, Kafka, or any hosted broker. A small local process or provided starter abstraction is enough.</p>
+<p>Create this execution:</p>
+<ol>
+<li>producer submits message 81;</li>
+<li>consumer receives and applies it;</li>
+<li>consumer stops before acknowledging;</li>
+<li>message 81 is delivered again.</li>
+</ol>
+<p>Before running it, predict whether the application effect will happen once or twice.</p>
+<p>Record:</p>
+<ul>
+<li>message ID;</li>
+<li>delivery attempts;</li>
+<li>acknowledgement state;</li>
+<li>application-state transitions.</li>
+</ul>
+<p>Then make repeated delivery safe with an idempotent operation or explicit duplicate suppression.</p>
+<p>Finish Part 0 by comparing:</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Request/response</th>
+<th>Asynchronous delivery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sender waits for</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>destination known at send time</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>pending work stored by</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>timeout ambiguity</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>duplicate/redelivery risk</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>natural fan-out</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The rest of the lab asks how communication works when knowledge of membership or destination is itself distributed.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="common-baseline--registry-model">Common baseline — registry model</h2><a class="sl-anchor-link" href="#common-baseline--registry-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Common baseline — registry model”</span></a></div>
+<p>Before either implementation track, model the same discovery problem using an Chapter 8-style registry.</p>
+<p>For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>REGISTER(node, endpoint, metadata)</span></span>
+<span class="line"><span>LOOKUP(key/capability/node)</span></span>
+<span class="line"><span>HEARTBEAT/lease</span></span></code></pre>
+<p>You do not need to rebuild the complete Chapter 8 lab. Use it as a comparison architecture.</p>
+<p>Record:</p>
+<ul>
+<li>who holds complete membership;</li>
+<li>lookup message path;</li>
+<li>failure dependency;</li>
+<li>stale-entry policy;</li>
+<li>per-membership-change communication.</li>
+</ul>
+<p>Then explain what your decentralized track removes and what new maintenance it introduces.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="track-a--structured-dht">Track A — Structured DHT</h1><a class="sl-anchor-link" href="#track-a--structured-dht"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Track A — Structured DHT”</span></a></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="a1-identifier-space">A1. Identifier space</h2><a class="sl-anchor-link" href="#a1-identifier-space"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A1. Identifier space”</span></a></div>
+<p>Choose a small deterministic identifier space suitable for local tests.</p>
+<p>Example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>0..255</span></span></code></pre>
+<p>Assign stable logical IDs to nodes and hash/map keys into the same space.</p>
+<p>Keep separate fields for:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>node_id</span></span>
+<span class="line"><span>network endpoint</span></span>
+<span class="line"><span>incarnation</span></span></code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="a2-ownership-rule">A2. Ownership rule</h2><a class="sl-anchor-link" href="#a2-ownership-rule"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A2. Ownership rule”</span></a></div>
+<p>Define exactly which node owns key identifier <code dir="auto">k</code>.</p>
+<p>A sufficient Chord-like rule is:</p>
+<blockquote>
+<p>first live successor clockwise from <code dir="auto">k</code>.</p>
+</blockquote>
+<p>Write tests for boundary cases, including keys equal to node IDs and wrap-around near zero.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a3-static-lookup-baseline">A3. Static lookup baseline</h2><a class="sl-anchor-link" href="#a3-static-lookup-baseline"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A3. Static lookup baseline”</span></a></div>
+<p>Start with at least 8 nodes.</p>
+<p>First implement correct lookup using minimal successor knowledge if useful.</p>
+<p>Measure:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>lookup success rate</span></span>
+<span class="line"><span>mean/median overlay hops</span></span>
+<span class="line"><span>p95 overlay hops</span></span></code></pre>
+<p>for a fixed set of lookups.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a4-routing-shortcuts">A4. Routing shortcuts</h2><a class="sl-anchor-link" href="#a4-routing-shortcuts"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A4. Routing shortcuts”</span></a></div>
+<p>Add Chord-style finger/shortcut entries or another documented structured routing table.</p>
+<p>Repeat the same lookups.</p>
+<p>Compare hop count, not only wall-clock latency.</p>
+<p>Explain why fewer overlay hops may still map to arbitrary physical Internet paths in a real deployment.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a5-node-join">A5. Node join</h2><a class="sl-anchor-link" href="#a5-node-join"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A5. Node join”</span></a></div>
+<p>Add one node between two existing identifiers.</p>
+<p>Demonstrate:</p>
+<ul>
+<li>predecessor/successor update;</li>
+<li>ownership-range change;</li>
+<li>key/metadata movement if implemented;</li>
+<li>temporary stale routing entries;</li>
+<li>stabilization/convergence.</li>
+</ul>
+<p>Record how many maintenance messages were required.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a6-graceful-leave">A6. Graceful leave</h2><a class="sl-anchor-link" href="#a6-graceful-leave"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A6. Graceful leave”</span></a></div>
+<p>Remove one node with notification/state handoff.</p>
+<p>Verify affected keys remain locatable according to the declared policy.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a7-crash-departure">A7. Crash departure</h2><a class="sl-anchor-link" href="#a7-crash-departure"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A7. Crash departure”</span></a></div>
+<p>Kill a node without graceful handoff.</p>
+<p>Use timeout/suspicion and successor/routing redundancy as appropriate.</p>
+<p>Required evidence:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>failure occurs</span></span>
+<span class="line"><span>first peer suspects</span></span>
+<span class="line"><span>routing/ownership repair begins</span></span>
+<span class="line"><span>lookups recover</span></span></code></pre>
+<p>Do not claim perfect crash detection.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a8-stale-route-experiment">A8. Stale route experiment</h2><a class="sl-anchor-link" href="#a8-stale-route-experiment"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A8. Stale route experiment”</span></a></div>
+<p>Freeze one node’s routing table while the topology changes elsewhere.</p>
+<p>Run lookups through it.</p>
+<p>Classify outcomes:</p>
+<ul>
+<li>successful via stale-but-correct forwarding;</li>
+<li>redirect/repair;</li>
+<li>temporary failure;</li>
+<li>incorrect owner.</li>
+</ul>
+<p>The final category is a correctness defect unless the protocol’s transient semantics explicitly permit it and repair it without violating stored-state guarantees.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a9-churn-experiment">A9. Churn experiment</h2><a class="sl-anchor-link" href="#a9-churn-experiment"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A9. Churn experiment”</span></a></div>
+<p>Run a deterministic sequence of joins/leaves/crashes while issuing lookups.</p>
+<p>Measure:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>lookup success rate during churn</span></span>
+<span class="line"><span>hop-count distribution</span></span>
+<span class="line"><span>maintenance messages</span></span>
+<span class="line"><span>recovery/stabilization time</span></span></code></pre>
+<p>Use a fixed seed if membership events are randomized.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="a10-optional-replication-extension">A10. Optional replication extension</h2><a class="sl-anchor-link" href="#a10-optional-replication-extension"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “A10. Optional replication extension”</span></a></div>
+<p>Replicate each key/value/location record to one or more additional owners.</p>
+<p>If attempted, state the consistency model. Do not write “replicated therefore consistent.”</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="track-b--gossip-membership">Track B — Gossip Membership</h1><a class="sl-anchor-link" href="#track-b--gossip-membership"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Track B — Gossip Membership”</span></a></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="b1-initial-membership">B1. Initial membership</h2><a class="sl-anchor-link" href="#b1-initial-membership"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B1. Initial membership”</span></a></div>
+<p>Start at least 10 local peer processes or simulated nodes from a small bootstrap seed list.</p>
+<p>Each node maintains a local membership view such as:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>node_id</span></span>
+<span class="line"><span>incarnation</span></span>
+<span class="line"><span>status</span></span>
+<span class="line"><span>endpoint</span></span>
+<span class="line"><span>last evidence</span></span></code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="b2-gossip-dissemination">B2. Gossip dissemination</h2><a class="sl-anchor-link" href="#b2-gossip-dissemination"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B2. Gossip dissemination”</span></a></div>
+<p>Implement configurable:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>round interval</span></span>
+<span class="line"><span>fanout</span></span>
+<span class="line"><span>random seed</span></span></code></pre>
+<p>Use push, pull, or push-pull; document the choice.</p>
+<p>Introduce one update known initially by one node.</p>
+<p>Track number/percentage of informed nodes per round.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b3-convergence-baseline">B3. Convergence baseline</h2><a class="sl-anchor-link" href="#b3-convergence-baseline"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B3. Convergence baseline”</span></a></div>
+<p>Run the same experiment across multiple random seeds.</p>
+<p>Report at least:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>median rounds to 50%</span></span>
+<span class="line"><span>median rounds to 90%</span></span>
+<span class="line"><span>p95 rounds to 90% or equivalent</span></span>
+<span class="line"><span>total messages</span></span></code></pre>
+<p>Do not evaluate probabilistic dissemination using only one run.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b4-message-loss">B4. Message loss</h2><a class="sl-anchor-link" href="#b4-message-loss"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B4. Message loss”</span></a></div>
+<p>Inject configurable loss into gossip exchanges.</p>
+<p>Repeat the convergence experiment.</p>
+<p>Explain how repeated dissemination provides alternative paths and what extra message cost pays for this resilience.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b5-member-failure">B5. Member failure</h2><a class="sl-anchor-link" href="#b5-member-failure"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B5. Member failure”</span></a></div>
+<p>Stop one member.</p>
+<p>Implement a failure-detector path appropriate to the reduced lab, for example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>ALIVE → SUSPECT → DEAD</span></span></code></pre>
+<p>A direct timeout should create suspicion rather than unquestioned ground truth.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b6-indirect-evidence">B6. Indirect evidence</h2><a class="sl-anchor-link" href="#b6-indirect-evidence"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B6. Indirect evidence”</span></a></div>
+<p>Where practical, ask one or more other peers to probe a suspected target before escalating.</p>
+<p>Compare false-suspicion behavior with direct-only probing.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b7-incarnation-refutation">B7. Incarnation refutation</h2><a class="sl-anchor-link" href="#b7-incarnation-refutation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B7. Incarnation refutation”</span></a></div>
+<p>Create:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>node A incarnation 7 = SUSPECT</span></span></code></pre>
+<p>then let A reassert/restart as:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>node A incarnation 8 = ALIVE</span></span></code></pre>
+<p>Verify stale incarnation-7 rumors cannot overwrite incarnation 8.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b8-partition-and-heal">B8. Partition and heal</h2><a class="sl-anchor-link" href="#b8-partition-and-heal"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B8. Partition and heal”</span></a></div>
+<p>Split membership into two reachable groups.</p>
+<p>Allow local membership views to evolve.</p>
+<p>Heal the partition and observe convergence.</p>
+<p>The report must show that different nodes can legitimately hold different membership views during the partition.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="b9-churn-experiment">B9. Churn experiment</h2><a class="sl-anchor-link" href="#b9-churn-experiment"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B9. Churn experiment”</span></a></div>
+<p>Repeatedly join/restart/stop nodes while gossip runs.</p>
+<p>Measure:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>membership convergence lag</span></span>
+<span class="line"><span>messages per node/time unit</span></span>
+<span class="line"><span>false suspicions</span></span>
+<span class="line"><span>recovery/refutation time</span></span></code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="b10-optional-payload-extension">B10. Optional payload extension</h2><a class="sl-anchor-link" href="#b10-optional-payload-extension"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “B10. Optional payload extension”</span></a></div>
+<p>Gossip one additional small metadata item such as:</p>
+<ul>
+<li>load estimate;</li>
+<li>capability;</li>
+<li>software version;</li>
+<li>cache presence.</li>
+</ul>
+<p>State whether this metadata is authoritative or approximate.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="common-step-c1--compare-registry-dht-and-gossip">Common Step C1 — Compare registry, DHT, and gossip</h1><a class="sl-anchor-link" href="#common-step-c1--compare-registry-dht-and-gossip"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Common Step C1 — Compare registry, DHT, and gossip”</span></a></div>
+<p>Every submission must complete this table using evidence and architecture reasoning:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Registry</th>
+<th>DHT</th>
+<th>Gossip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exact key lookup</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>rich metadata query</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>full membership at one node</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>central runtime dependency</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>churn maintenance</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>stale-state behavior</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>failure detection model</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>per-node state</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Your implemented track should be discussed in more detail than the two comparison-only designs.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="common-step-c2--trust-model">Common Step C2 — Trust model</h1><a class="sl-anchor-link" href="#common-step-c2--trust-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Common Step C2 — Trust model”</span></a></div>
+<p>State whether nodes are assumed:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>correct except crash/omission</span></span></code></pre>
+<p>or whether malicious behavior is in scope.</p>
+<p>The required lab assumes non-Byzantine peers.</p>
+<p>Explain one attack that would become possible if a peer could lie about:</p>
+<ul>
+<li>identity;</li>
+<li>ownership/routing;</li>
+<li>membership status.</li>
+</ul>
+<p>Chapter 12 will address that stronger failure model.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="common-step-c3--ai-audit">Common Step C3 — AI audit</h1><a class="sl-anchor-link" href="#common-step-c3--ai-audit"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Common Step C3 — AI audit”</span></a></div>
+<p>If an AI assistant contributed, ask it to identify one weakness under membership change.</p>
+<p>For DHT track, inspect for:</p>
+<ul>
+<li>static-only routing;</li>
+<li>stale endpoint reuse;</li>
+<li>incorrect wrap-around ownership;</li>
+<li>join that moves no data/metadata;</li>
+<li>crash treated like graceful leave.</li>
+</ul>
+<p>For gossip track, inspect for:</p>
+<ul>
+<li>one timeout directly marks DEAD;</li>
+<li>stale rumors overwrite newer incarnations;</li>
+<li>unbounded message fanout;</li>
+<li>one run treated as convergence proof;</li>
+<li>all local views assumed identical at every instant.</li>
+</ul>
+<p>Verify one finding experimentally.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="transparent-test-target">Transparent-test target</h1><a class="sl-anchor-link" href="#transparent-test-target"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Transparent-test target”</span></a></div>
+<p>The intended public tests are documented under:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>tests/official/README.md</span></span></code></pre>
+<p>Executable public tests now live under <code dir="auto">tests/official/</code>, with a choice-based DHT/gossip adapter in <code dir="auto">starter/src/</code>. You select one track explicitly; deterministic ownership/merge invariants are tested while multi-process churn, loss, and convergence remain evidence-based.</p>
+<p>No hidden cases are planned.</p>
+<p>You add deterministic cases under <code dir="auto">tests/student/</code> and may add statistical experiment scripts separately.</p>
+<hr>
+<div class="sl-heading-wrapper level-h1"><h1 id="submission">Submission</h1><a class="sl-anchor-link" href="#submission"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Submission”</span></a></div>
+<p>Submit:</p>
+<ul>
+<li>source code;</li>
+<li>track declaration;</li>
+<li>topology/bootstrap configuration;</li>
+<li>reproducible commands;</li>
+<li><code dir="auto">REPORT.md</code>;</li>
+<li>machine-readable lookup/gossip traces;</li>
+<li>measurement data;</li>
+<li>public/student test descriptions/cases;</li>
+<li>AI-use disclosure.</li>
+</ul>
+<div class="sl-heading-wrapper level-h1"><h1 id="success-criterion">Success criterion</h1><a class="sl-anchor-link" href="#success-criterion"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Success criterion”</span></a></div>
+<p>A strong submission can say either:</p>
+<blockquote>
+<p>“This structured overlay finds the correct owner using bounded partial routing state, repairs membership/ownership under the tested churn events, and exhibits this measured lookup/maintenance cost.”</p>
+</blockquote>
+<p>or:</p>
+<blockquote>
+<p>“This gossip membership protocol converges probabilistically under the tested loss/churn model, distinguishes suspicion from truth, rejects stale incarnations, and exhibits this measured convergence/message cost.”</p>
+</blockquote>
+<p>In both cases, you must explain why a simpler registry would or would not be preferable for the same problem.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="finish-the-chapter">Finish the chapter</h2><a class="sl-anchor-link" href="#finish-the-chapter"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Finish the chapter”</span></a></div>
+<p>Reproduce the important result from a clean start. Then return to your opening prediction: state what changed in your explanation, what evidence caused the change, and what uncertainty remains. A successful command or screenshot is not enough when the claim concerns retries, ordering, durability, consistency, recovery, security, or performance.</p>
+<div class="ds-next-action">
+  <span>Chapter complete</span>
+  <strong>Continue the course</strong>
+  <a href="../../m06-time-causality/">Coordination I — Time, Events, and Causality →</a>
+</div>
+<nav class="ds-sequence" aria-label="Course sequence">
+<a class="ds-sequence-link" href="../../m03-rpc/">← Communication I — Messages, RPC, and Remote Failure</a>
+<a class="ds-sequence-link next" href="../../m06-time-causality/">Coordination I — Time, Events, and Causality →</a>
+</nav>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div></body></html>

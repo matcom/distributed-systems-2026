@@ -1,0 +1,381 @@
+{
+  "modules": [
+    {
+      "id": "M00",
+      "slug": "tooling",
+      "title": "Taller de laboratorio",
+      "sequence": 0,
+      "guiding_question": "¿Cómo observas, controlas y sometes a fallos de forma segura un sistema distribuido en una sola máquina?"
+    },
+    {
+      "id": "M01",
+      "slug": "distributed-systems",
+      "title": "Pensar en sistemas distribuidos",
+      "sequence": 1,
+      "guiding_question": "¿Qué cambia cuando una operación atraviesa un límite de fallo independiente?"
+    },
+    {
+      "id": "M02",
+      "slug": "ray-middleware",
+      "title": "Arquitecturas y middleware",
+      "sequence": 2,
+      "guiding_question": "¿Dónde deben residir las responsabilidades distribuidas y qué decisiones toma el middleware por ti?"
+    },
+    {
+      "id": "M05",
+      "slug": "processes-concurrency",
+      "title": "Procesos, virtualización y ejecución distribuida",
+      "sequence": 3,
+      "guiding_question": "¿Qué límites de ejecución aíslan estado, planificación, recursos y fallos?"
+    },
+    {
+      "id": "M03",
+      "slug": "rpc",
+      "title": "Comunicación I — Mensajes, RPC y fallos remotos",
+      "sequence": 4,
+      "guiding_question": "Cuando una operación remota no responde, ¿qué sabes exactamente que ocurrió?"
+    },
+    {
+      "id": "M12",
+      "slug": "dht-gossip",
+      "title": "Comunicación II — Mensajería, diseminación y overlays",
+      "sequence": 5,
+      "guiding_question": "¿Cómo debe moverse la información cuando una única ruta directa de solicitud/respuesta no basta?"
+    },
+    {
+      "id": "M06",
+      "slug": "time-causality",
+      "title": "Coordinación I — Tiempo, eventos y causalidad",
+      "sequence": 6,
+      "guiding_question": "Si los relojes no coinciden, ¿cómo puedes seguir razonando sobre qué ocurrió antes que qué?"
+    },
+    {
+      "id": "M09",
+      "slug": "consensus",
+      "title": "Coordinación II — Exclusión mutua, elecciones y acuerdo",
+      "sequence": 7,
+      "guiding_question": "¿Cuándo el orden, el acceso exclusivo, la elección de líder y el consenso requieren mecanismos diferentes?"
+    },
+    {
+      "id": "M04",
+      "slug": "architecture-discovery",
+      "title": "Nombres, descubrimiento y búsqueda descentralizada",
+      "sequence": 8,
+      "guiding_question": "¿Cómo encuentras el servicio lógico correcto cuando los nombres permanecen estables pero cambian las ubicaciones y la membresía?"
+    },
+    {
+      "id": "M08",
+      "slug": "replication-consistency",
+      "title": "Replicación y consistencia",
+      "sequence": 9,
+      "guiding_question": "Cuando varios nodos mantienen los mismos datos lógicos, ¿qué historiales puede observar un cliente?"
+    },
+    {
+      "id": "M07",
+      "slug": "failures",
+      "title": "Tolerancia a fallos I — Modelos de fallo, resiliencia y recuperación",
+      "sequence": 10,
+      "guiding_question": "¿Cómo sigues tomando decisiones seguras cuando un fallo y una lentitud pueden parecer lo mismo?"
+    },
+    {
+      "id": "M11",
+      "slug": "transactions-sharding",
+      "title": "Tolerancia a fallos II — Transacciones, recuperación y estado distribuido",
+      "sequence": 11,
+      "guiding_question": "¿Qué ocurre cuando una operación lógica modifica estado perteneciente a varias máquinas que pueden fallar de forma independiente?"
+    },
+    {
+      "id": "M15",
+      "slug": "security-byzantine",
+      "title": "Seguridad, confianza y operación de sistemas distribuidos",
+      "sequence": 12,
+      "guiding_question": "¿Qué cambia cuando un participante puede no estar autorizado, estar comprometido, actuar maliciosamente, estar sobrecargado o ser simplemente difícil de diagnosticar?"
+    }
+  ],
+  "projects": [
+    {
+      "id": "P01",
+      "slug": "distributed-ml",
+      "title": "Plataforma distribuida de entrenamiento y serving de ML",
+      "sequence": 1,
+      "focus": [
+        "scheduling distribuido",
+        "fallo y retries de workers",
+        "placement y durabilidad de artefactos",
+        "consistencia del estado de jobs",
+        "cargas paralelas",
+        "disponibilidad del serving"
+      ]
+    },
+    {
+      "id": "P02",
+      "slug": "distributed-ftp",
+      "title": "Servicio FTP distribuido tolerante a fallos",
+      "sequence": 2,
+      "focus": [
+        "interoperabilidad de protocolo",
+        "datos de archivo replicados",
+        "metadata distribuida",
+        "fallo durante transferencia",
+        "recovery de particiones",
+        "fronteras de durabilidad"
+      ]
+    },
+    {
+      "id": "P03",
+      "slug": "tournament-executor",
+      "title": "Plataforma distribuida de ejecución de torneos",
+      "sequence": 3,
+      "focus": [
+        "scheduling distribuido",
+        "distribución y aislamiento de código",
+        "membership de workers",
+        "semántica de retry",
+        "prevención de resultados duplicados",
+        "estado durable del torneo"
+      ]
+    },
+    {
+      "id": "P04",
+      "slug": "document-search",
+      "title": "Sistema distribuido de búsqueda documental",
+      "sequence": 4,
+      "focus": [
+        "indexación distribuida",
+        "sharding y replicación",
+        "identidad documental",
+        "detección de duplicados",
+        "entradas obsoletas",
+        "selección de fuentes"
+      ]
+    },
+    {
+      "id": "P05",
+      "slug": "p2p-files",
+      "title": "Distribución P2P de archivos por bloques",
+      "sequence": 5,
+      "focus": [
+        "discovery de peers",
+        "scheduling de chunks",
+        "transferencia multi-fuente",
+        "content addressing e integridad",
+        "churn",
+        "replicación"
+      ]
+    },
+    {
+      "id": "P06",
+      "slug": "agent-platform",
+      "title": "Plataforma distribuida de agentes y capacidades",
+      "sequence": 6,
+      "focus": [
+        "discovery de capacidades",
+        "identidad distribuida",
+        "resiliencia del registro",
+        "reemplazo de agentes",
+        "ciclo de vida de tareas",
+        "comunicación entre agentes"
+      ]
+    },
+    {
+      "id": "P07",
+      "slug": "calendar",
+      "title": "Calendario distribuido y planificador de grupos",
+      "sequence": 7,
+      "focus": [
+        "actualizaciones concurrentes",
+        "acuerdo de grupo",
+        "operación offline",
+        "detección de conflictos",
+        "identidad y privacidad",
+        "fronteras transaccionales"
+      ]
+    },
+    {
+      "id": "P08",
+      "slug": "secure-messaging",
+      "title": "Mensajería segura descentralizada",
+      "sequence": 8,
+      "focus": [
+        "entrega offline",
+        "store-and-forward",
+        "identidad y discovery",
+        "orden de mensajes",
+        "supresión de duplicados",
+        "comunicación segura"
+      ]
+    },
+    {
+      "id": "P09",
+      "slug": "tag-file-store",
+      "title": "Almacén distribuido de archivos basado en etiquetas",
+      "sequence": 9,
+      "focus": [
+        "consistencia de metadata",
+        "contenido replicado",
+        "índices por etiquetas",
+        "actualizaciones concurrentes",
+        "semántica de borrado",
+        "reconciliación tras partición"
+      ]
+    },
+    {
+      "id": "P10",
+      "slug": "media-streaming",
+      "title": "Servicio distribuido de streaming multimedia tolerante a fallos",
+      "sequence": 10,
+      "focus": [
+        "almacenamiento multimedia replicado",
+        "streaming por chunks",
+        "buffering",
+        "failover de fuentes",
+        "búsqueda de metadata",
+        "entrega consciente de la red"
+      ]
+    },
+    {
+      "id": "P11",
+      "slug": "federated-microblog",
+      "title": "Red federada de microblogging",
+      "sequence": 11,
+      "focus": [
+        "identidad federada",
+        "estado del grafo de relaciones",
+        "propagación de publicaciones",
+        "generación de timelines",
+        "consistencia de caché",
+        "borrado remoto y privacidad"
+      ]
+    },
+    {
+      "id": "P12",
+      "slug": "crawler",
+      "title": "Plataforma distribuida de crawling y extracción web",
+      "sequence": 12,
+      "focus": [
+        "colas de trabajo distribuidas",
+        "deduplicación de URLs",
+        "semántica de retry",
+        "backpressure",
+        "politeness por host",
+        "estado durable del crawl"
+      ]
+    },
+    {
+      "id": "P13",
+      "slug": "event-log",
+      "title": "Log de eventos replicado y grupos de consumidores",
+      "sequence": 13,
+      "focus": [
+        "logs particionados",
+        "orden de registros",
+        "replicación",
+        "offsets de consumidores",
+        "asignación de grupos",
+        "replay y procesamiento duplicado"
+      ]
+    },
+    {
+      "id": "P14",
+      "slug": "orchestrator",
+      "title": "Orquestador de trabajos de clúster",
+      "sequence": 14,
+      "focus": [
+        "reconciliación de estado deseado",
+        "scheduling consciente de recursos",
+        "membership de workers",
+        "detección de fallos",
+        "rescheduling",
+        "estado del control plane"
+      ]
+    },
+    {
+      "id": "P15",
+      "slug": "collaborative-editor",
+      "title": "Editor colaborativo offline distribuido",
+      "sequence": 15,
+      "focus": [
+        "convergencia de réplicas",
+        "operación offline",
+        "semántica concurrente de insert/delete",
+        "historia causal",
+        "sincronización",
+        "garbage collection/compaction"
+      ]
+    },
+    {
+      "id": "P16",
+      "slug": "object-storage",
+      "title": "Servicio distribuido de almacenamiento de objetos",
+      "sequence": 16,
+      "focus": [
+        "placement de objetos",
+        "replicación y reparación",
+        "consistencia de metadata",
+        "verificación de integridad",
+        "rebalanceo",
+        "acknowledgement durable"
+      ]
+    },
+    {
+      "id": "P17",
+      "slug": "build-executor",
+      "title": "Ejecutor distribuido de builds y pruebas",
+      "sequence": 17,
+      "focus": [
+        "scheduling de DAGs",
+        "ejecución aislada",
+        "transferencia de artefactos",
+        "clasificación de retries",
+        "acknowledgement de resultados",
+        "caché por contenido"
+      ]
+    },
+    {
+      "id": "P18",
+      "slug": "distributed-dns",
+      "title": "Servicio DNS autoritativo distribuido",
+      "sequence": 18,
+      "focus": [
+        "replicación DNS autoritativa",
+        "alta disponibilidad",
+        "actualizaciones versionadas de zona",
+        "reparación de réplicas stale",
+        "política de partición",
+        "restart y recovery"
+      ]
+    },
+    {
+      "id": "P19",
+      "slug": "vector-search",
+      "title": "Motor distribuido de búsqueda vectorial",
+      "sequence": 19,
+      "focus": [
+        "sharding de vectores",
+        "ejecución distribuida de consultas",
+        "agregación top-k",
+        "replicación",
+        "concurrencia escritura/búsqueda",
+        "comportamiento degradado"
+      ]
+    },
+    {
+      "id": "P20",
+      "slug": "edge-cache",
+      "title": "Caché de contenido en el borde y red de entrega",
+      "sequence": 20,
+      "focus": [
+        "placement de caché",
+        "eviction",
+        "frescura e invalidación",
+        "selección de edge",
+        "fallo del origen",
+        "política de datos stale/partición"
+      ]
+    }
+  ],
+  "scenario_library": {
+    "faults": "F0-F21",
+    "workloads": "W1-W8"
+  }
+}

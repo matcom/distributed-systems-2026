@@ -1,0 +1,381 @@
+{
+  "modules": [
+    {
+      "id": "M00",
+      "slug": "tooling",
+      "title": "Laboratory Bootcamp",
+      "sequence": 0,
+      "guiding_question": "How do you observe, control, and break a distributed system safely on one machine?"
+    },
+    {
+      "id": "M01",
+      "slug": "distributed-systems",
+      "title": "Thinking in Distributed Systems",
+      "sequence": 1,
+      "guiding_question": "What changes when one operation crosses an independent failure boundary?"
+    },
+    {
+      "id": "M02",
+      "slug": "ray-middleware",
+      "title": "Architectures and Middleware",
+      "sequence": 2,
+      "guiding_question": "Where should distributed responsibilities live, and what does middleware decide for you?"
+    },
+    {
+      "id": "M05",
+      "slug": "processes-concurrency",
+      "title": "Processes, Virtualization, and Distributed Execution",
+      "sequence": 3,
+      "guiding_question": "Which execution boundaries isolate state, scheduling, resources, and failure?"
+    },
+    {
+      "id": "M03",
+      "slug": "rpc",
+      "title": "Communication I — Messages, RPC, and Remote Failure",
+      "sequence": 4,
+      "guiding_question": "When a remote operation does not return, what exactly do you know happened?"
+    },
+    {
+      "id": "M12",
+      "slug": "dht-gossip",
+      "title": "Communication II — Messaging, Dissemination, and Overlays",
+      "sequence": 5,
+      "guiding_question": "How should information move when one direct request/response path is not enough?"
+    },
+    {
+      "id": "M06",
+      "slug": "time-causality",
+      "title": "Coordination I — Time, Events, and Causality",
+      "sequence": 6,
+      "guiding_question": "If clocks disagree, how can you still reason about what happened before what?"
+    },
+    {
+      "id": "M09",
+      "slug": "consensus",
+      "title": "Coordination II — Mutual Exclusion, Elections, and Agreement",
+      "sequence": 7,
+      "guiding_question": "When do ordering, exclusive access, leader election, and consensus require different mechanisms?"
+    },
+    {
+      "id": "M04",
+      "slug": "architecture-discovery",
+      "title": "Naming, Discovery, and Decentralized Lookup",
+      "sequence": 8,
+      "guiding_question": "How do you find the right logical service when names stay stable but locations and membership change?"
+    },
+    {
+      "id": "M08",
+      "slug": "replication-consistency",
+      "title": "Replication and Consistency",
+      "sequence": 9,
+      "guiding_question": "When several nodes hold the same logical data, which histories may a client observe?"
+    },
+    {
+      "id": "M07",
+      "slug": "failures",
+      "title": "Fault Tolerance I — Failure Models, Resilience, and Recovery",
+      "sequence": 10,
+      "guiding_question": "How do you keep making safe decisions when failure and slowness can look the same?"
+    },
+    {
+      "id": "M11",
+      "slug": "transactions-sharding",
+      "title": "Fault Tolerance II — Transactions, Recovery, and Distributed State",
+      "sequence": 11,
+      "guiding_question": "What happens when one logical operation changes state owned by several independently failing machines?"
+    },
+    {
+      "id": "M15",
+      "slug": "security-byzantine",
+      "title": "Security, Trust, and Operating Distributed Systems",
+      "sequence": 12,
+      "guiding_question": "What changes when a participant may be unauthorized, compromised, malicious, overloaded, or simply hard to diagnose?"
+    }
+  ],
+  "projects": [
+    {
+      "id": "P01",
+      "slug": "distributed-ml",
+      "title": "Distributed Machine Learning Training and Serving Platform",
+      "sequence": 1,
+      "focus": [
+        "distributed job scheduling",
+        "worker failure and retries",
+        "artifact placement and durability",
+        "job-state consistency",
+        "parallel workloads",
+        "model-serving availability"
+      ]
+    },
+    {
+      "id": "P02",
+      "slug": "distributed-ftp",
+      "title": "Fault-Tolerant Distributed FTP Service",
+      "sequence": 2,
+      "focus": [
+        "protocol interoperability",
+        "replicated file data",
+        "distributed metadata",
+        "mid-transfer failure",
+        "partition recovery",
+        "durability boundaries"
+      ]
+    },
+    {
+      "id": "P03",
+      "slug": "tournament-executor",
+      "title": "Distributed Tournament Execution Platform",
+      "sequence": 3,
+      "focus": [
+        "distributed scheduling",
+        "code distribution and isolation",
+        "worker membership",
+        "retry semantics",
+        "duplicate-result prevention",
+        "durable tournament state"
+      ]
+    },
+    {
+      "id": "P04",
+      "slug": "document-search",
+      "title": "Distributed Document Search System",
+      "sequence": 4,
+      "focus": [
+        "distributed indexing",
+        "sharding and replication",
+        "document identity",
+        "duplicate detection",
+        "stale entries",
+        "source selection"
+      ]
+    },
+    {
+      "id": "P05",
+      "slug": "p2p-files",
+      "title": "Peer-to-Peer Chunked File Distribution",
+      "sequence": 5,
+      "focus": [
+        "peer discovery",
+        "chunk scheduling",
+        "multi-source transfer",
+        "content addressing and integrity",
+        "churn",
+        "replication"
+      ]
+    },
+    {
+      "id": "P06",
+      "slug": "agent-platform",
+      "title": "Distributed Agent and Capability Platform",
+      "sequence": 6,
+      "focus": [
+        "capability discovery",
+        "distributed identity",
+        "service registry resilience",
+        "agent replacement",
+        "task lifecycle",
+        "inter-agent communication"
+      ]
+    },
+    {
+      "id": "P07",
+      "slug": "calendar",
+      "title": "Distributed Calendar and Group Scheduler",
+      "sequence": 7,
+      "focus": [
+        "concurrent updates",
+        "group agreement",
+        "offline operation",
+        "conflict detection",
+        "identity and privacy",
+        "transaction boundaries"
+      ]
+    },
+    {
+      "id": "P08",
+      "slug": "secure-messaging",
+      "title": "Decentralized Secure Messaging",
+      "sequence": 8,
+      "focus": [
+        "offline delivery",
+        "store-and-forward design",
+        "identity and discovery",
+        "message ordering",
+        "duplicate suppression",
+        "secure communication"
+      ]
+    },
+    {
+      "id": "P09",
+      "slug": "tag-file-store",
+      "title": "Tag-Based Distributed File Store",
+      "sequence": 9,
+      "focus": [
+        "metadata consistency",
+        "replicated content",
+        "tag indexes",
+        "concurrent metadata updates",
+        "delete semantics",
+        "partition reconciliation"
+      ]
+    },
+    {
+      "id": "P10",
+      "slug": "media-streaming",
+      "title": "Fault-Tolerant Media Streaming Service",
+      "sequence": 10,
+      "focus": [
+        "replicated media storage",
+        "chunked streaming",
+        "buffering",
+        "source failover",
+        "metadata search",
+        "network-aware delivery"
+      ]
+    },
+    {
+      "id": "P11",
+      "slug": "federated-microblog",
+      "title": "Federated Microblogging Network",
+      "sequence": 11,
+      "focus": [
+        "federated identity",
+        "relationship graph state",
+        "post propagation",
+        "timeline generation",
+        "cache consistency",
+        "remote deletion and privacy"
+      ]
+    },
+    {
+      "id": "P12",
+      "slug": "crawler",
+      "title": "Distributed Web Crawler and Extraction Platform",
+      "sequence": 12,
+      "focus": [
+        "distributed work queues",
+        "URL deduplication",
+        "retry semantics",
+        "backpressure",
+        "host politeness",
+        "persistent crawl state"
+      ]
+    },
+    {
+      "id": "P13",
+      "slug": "event-log",
+      "title": "Replicated Event Log and Consumer Groups",
+      "sequence": 13,
+      "focus": [
+        "partitioned logs",
+        "record ordering",
+        "replication",
+        "consumer offsets",
+        "consumer-group assignment",
+        "replay and duplicate processing"
+      ]
+    },
+    {
+      "id": "P14",
+      "slug": "orchestrator",
+      "title": "Cluster Job Orchestrator",
+      "sequence": 14,
+      "focus": [
+        "desired-state reconciliation",
+        "resource-aware scheduling",
+        "worker membership",
+        "failure detection",
+        "rescheduling",
+        "control-plane state"
+      ]
+    },
+    {
+      "id": "P15",
+      "slug": "collaborative-editor",
+      "title": "Collaborative Offline Document Editor",
+      "sequence": 15,
+      "focus": [
+        "replica convergence",
+        "offline operation",
+        "concurrent insert/delete semantics",
+        "causal history",
+        "synchronization",
+        "garbage collection/compaction"
+      ]
+    },
+    {
+      "id": "P16",
+      "slug": "object-storage",
+      "title": "Distributed Object Storage Service",
+      "sequence": 16,
+      "focus": [
+        "object placement",
+        "replication and repair",
+        "metadata consistency",
+        "integrity verification",
+        "rebalancing",
+        "durable acknowledgement"
+      ]
+    },
+    {
+      "id": "P17",
+      "slug": "build-executor",
+      "title": "Distributed Build and Test Executor",
+      "sequence": 17,
+      "focus": [
+        "DAG scheduling",
+        "isolated execution",
+        "artifact transfer",
+        "retry classification",
+        "result acknowledgement",
+        "content-based caching"
+      ]
+    },
+    {
+      "id": "P18",
+      "slug": "distributed-dns",
+      "title": "Distributed Authoritative DNS Service",
+      "sequence": 18,
+      "focus": [
+        "authoritative DNS replication",
+        "high availability",
+        "versioned zone updates",
+        "stale-replica repair",
+        "partition policy",
+        "restart and recovery"
+      ]
+    },
+    {
+      "id": "P19",
+      "slug": "vector-search",
+      "title": "Distributed Vector Search Engine",
+      "sequence": 19,
+      "focus": [
+        "vector sharding",
+        "distributed query execution",
+        "top-k aggregation",
+        "replication",
+        "write/search concurrency",
+        "degraded query behavior"
+      ]
+    },
+    {
+      "id": "P20",
+      "slug": "edge-cache",
+      "title": "Edge Content Cache and Delivery Network",
+      "sequence": 20,
+      "focus": [
+        "cache placement",
+        "eviction",
+        "freshness and invalidation",
+        "edge selection",
+        "origin failure",
+        "partition/stale-data policy"
+      ]
+    }
+  ],
+  "scenario_library": {
+    "faults": "F0-F21",
+    "workloads": "W1-W8"
+  }
+}

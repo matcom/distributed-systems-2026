@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img">
+  <style>
+    .t{font:600 22px system-ui,sans-serif;fill:#102a3a}.s{font:500 17px system-ui,sans-serif;fill:#526570}
+    .m{font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#0a6074;letter-spacing:.03em}
+    .box{fill:#fff;stroke:#9fb0b9;stroke-width:2}.soft{fill:#f5f8f9;stroke:#cbd6db;stroke-width:2}
+    .accent{fill:#e3f1f4;stroke:#0a6074;stroke-width:2.5}.line{stroke:#516a76;stroke-width:3;fill:none}
+    .dash{stroke:#8ba0aa;stroke-width:3;stroke-dasharray:10 9;fill:none}.teal{stroke:#0a6074;stroke-width:4;fill:none}
+    .bad{stroke:#8a4f4f;stroke-width:3;fill:none;stroke-dasharray:8 7}.dot{fill:#0a6074}.node{fill:#fff;stroke:#102a3a;stroke-width:3}
+  </style><rect width="960" height="480" fill="#fff"/>
+    <text x="55" y="48" class="m">ORDEN CAUSAL A PARTIR DE EVENTOS + MENSAJES</text>
+    <text x="205" y="92" text-anchor="middle" class="t">Nodo A</text><text x="705" y="92" text-anchor="middle" class="t">Nodo B</text>
+    <path d="M205 115 V405 M705 115 V405" class="line"/>
+    <circle cx="205" cy="160" r="9" class="dot"/><text x="175" y="151" text-anchor="end" class="s">A1 · 10:00:00.100</text>
+    <circle cx="205" cy="250" r="9" class="dot"/><text x="175" y="241" text-anchor="end" class="s">A2</text>
+    <circle cx="705" cy="205" r="9" class="dot"/><text x="735" y="196" class="s">B1 · 09:59:59.900</text>
+    <circle cx="705" cy="325" r="9" class="dot"/><text x="735" y="316" class="s">B2</text>
+    <path d="M216 160 C360 165 520 190 694 205" class="teal"/>
+    <path d="M694 325 C520 320 365 265 216 250" class="teal"/>
+    <text x="455" y="155" class="m">mensaje</text><text x="455" y="338" class="m">respuesta</text>
+    <rect x="330" y="375" width="300" height="55" rx="12" class="accent"/>
+    <text x="480" y="408" text-anchor="middle" class="t">el mensaje pesa más que el reloj de pared</text>
+  </svg>

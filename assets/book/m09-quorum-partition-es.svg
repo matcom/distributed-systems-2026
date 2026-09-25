@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img">
+  <style>
+    .t{font:600 22px system-ui,sans-serif;fill:#102a3a}.s{font:500 17px system-ui,sans-serif;fill:#526570}
+    .m{font:700 15px ui-monospace,SFMono-Regular,Consolas,monospace;fill:#0a6074;letter-spacing:.03em}
+    .box{fill:#fff;stroke:#9fb0b9;stroke-width:2}.soft{fill:#f5f8f9;stroke:#cbd6db;stroke-width:2}
+    .accent{fill:#e3f1f4;stroke:#0a6074;stroke-width:2.5}.line{stroke:#516a76;stroke-width:3;fill:none}
+    .dash{stroke:#8ba0aa;stroke-width:3;stroke-dasharray:10 9;fill:none}.teal{stroke:#0a6074;stroke-width:4;fill:none}
+    .bad{stroke:#8a4f4f;stroke-width:3;fill:none;stroke-dasharray:8 7}.dot{fill:#0a6074}.node{fill:#fff;stroke:#102a3a;stroke-width:3}
+  </style><rect width="960" height="480" fill="#fff"/>
+    <text x="55" y="48" class="m">CINCO NODOS, DOS LADOS DE UNA PARTICIÓN</text>
+    <path d="M470 70 V420" class="dash"/>
+    <text x="230" y="90" text-anchor="middle" class="t">Minoría · 2/5</text>
+    <text x="710" y="90" text-anchor="middle" class="t">Mayoría · 3/5</text>
+    <circle cx="175" cy="195" r="58" class="node"/><circle cx="330" cy="300" r="58" class="node"/>
+    <circle cx="610" cy="190" r="58" class="node"/><circle cx="760" cy="190" r="58" class="accent"/><circle cx="685" cy="330" r="58" class="node"/>
+    <text x="175" y="202" text-anchor="middle" class="t">A</text><text x="330" y="307" text-anchor="middle" class="t">B</text>
+    <text x="610" y="197" text-anchor="middle" class="t">C</text><text x="760" y="197" text-anchor="middle" class="t">D</text><text x="685" y="337" text-anchor="middle" class="t">E</text>
+    <text x="175" y="270" text-anchor="middle" class="s">líder anterior</text><text x="760" y="270" text-anchor="middle" class="s">nuevo líder</text>
+    <rect x="95" y="370" width="285" height="55" rx="12" class="soft"/><text x="238" y="404" text-anchor="middle" class="m">VIVO ≠ PUEDE CONFIRMAR</text>
+    <rect x="555" y="370" width="315" height="55" rx="12" class="accent"/><text x="712" y="404" text-anchor="middle" class="m">LA MAYORÍA PUEDE AVANZAR</text>
+  </svg>

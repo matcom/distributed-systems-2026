@@ -1,0 +1,908 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-g5ptsecz"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Security, Trust, and Operating Distributed Systems — Lesson | Distributed Systems 2026</title><link rel="canonical" href="https://matcom.github.io/distributed-systems-2026/generated/m15-security-byzantine/lesson/"/><link rel="alternate" hreflang="en" href="https://matcom.github.io/distributed-systems-2026/generated/m15-security-byzantine/lesson/"/><link rel="alternate" hreflang="es" href="https://matcom.github.io/distributed-systems-2026/es/generated/m15-security-byzantine/lesson/"/><link rel="alternate" hreflang="x-default" href="https://matcom.github.io/distributed-systems-2026/generated/m15-security-byzantine/lesson/"/><link rel="sitemap" href="/distributed-systems-2026/sitemap-index.xml"/><link rel="shortcut icon" href="/distributed-systems-2026/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.3.2"/><meta name="generator" content="Starlight v0.42.0"/><meta property="og:title" content="Security, Trust, and Operating Distributed Systems — Lesson"/><meta property="og:type" content="article"/><meta property="og:url" content="https://matcom.github.io/distributed-systems-2026/generated/m15-security-byzantine/lesson/"/><meta property="og:locale" content="en"/><meta property="og:description" content="What changes when a participant may be unauthorized, compromised, malicious, overloaded, or simply hard to diagnose?"/><meta property="og:site_name" content="Distributed Systems 2026"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="What changes when a participant may be unauthorized, compromised, malicious, overloaded, or simply hard to diagnose?"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/distributed-systems-2026/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/distributed-systems-2026/_astro/index.BEMFnyg8.css"><script type="module" src="/distributed-systems-2026/_astro/page.Dwipeu-R.js"></script></head><body class="astro-g5ptsecz"><a class="sl-skip-link astro-qb7clj6f" href="#_top">Skip to content</a><div class="page sl-flex astro-yntsjkba"><header class="header astro-yntsjkba"><div class="header astro-by6fddyj"><div class="title-wrapper sl-flex astro-by6fddyj"><a class="uh-brand astro-sihtrrup" href="/distributed-systems-2026/" aria-label="Distributed Systems 2026 home"><img src="/distributed-systems-2026/assets/uh-logo.jpg" alt="" width="128" height="171" decoding="async" class="astro-sihtrrup"><span class="uh-brand-copy astro-sihtrrup"><strong class="astro-sihtrrup">Universidad de La Habana</strong><span class="uh-brand-context uh-brand-context-full astro-sihtrrup">Facultad de Matemática y Computación · Distributed Systems 2026</span><span class="uh-brand-context uh-brand-context-compact astro-sihtrrup">MatCom · Distributed Systems 2026</span></span></a></div><div class="sl-flex print:hidden astro-by6fddyj"><site-search class="astro-by6fddyj astro-b5kgnn7o" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-b5kgnn7o"><svg aria-hidden="true" class="astro-b5kgnn7o astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-b5kgnn7o" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-b5kgnn7o" style="display: none;"><kbd class="astro-b5kgnn7o">Ctrl</kbd><kbd class="astro-b5kgnn7o">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-b5kgnn7o"><div class="dialog-frame sl-flex astro-b5kgnn7o"><button data-close-modal class="sl-flex md:sl-hidden astro-b5kgnn7o">Cancel</button><div class="search-container astro-b5kgnn7o"><div id="starlight__search" class="astro-b5kgnn7o"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/distributed-systems-2026/_astro/Search.astro_astro_type_script_index_0_lang.Coa9acBV.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-by6fddyj"><div class="sl-flex social-icons astro-by6fddyj"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Dark</option><option value="light" class="astro-2z5xp7gb">Light</option><option value="auto" selected class="astro-2z5xp7gb">Auto</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select language</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/generated/m15-security-byzantine/lesson/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/generated/m15-security-byzantine/lesson/" class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-yntsjkba" aria-label="Main"><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden astro-r2osgdlg"><svg aria-hidden="true" class="open-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only astro-r2osgdlg">Menu</span></button><script type="module">var e=class extends HTMLElement{constructor(){super(),matchMedia(`(min-width: 50em)`).addEventListener(`change`,()=>this.hidePopover()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane astro-yntsjkba"><div class="sidebar-content sl-flex astro-yntsjkba"><sl-sidebar-state-persist data-hash="12m8ezn" class="astro-ipdry5cl"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-rmhv4bp6"><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Course</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/modules/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Contents</span></a></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Warm-up</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m00-tooling/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Warm-up · Laboratory Bootcamp</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part I — Foundations and Architecture</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m01-distributed-systems/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 1 · Thinking in Distributed Systems</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m02-ray-middleware/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 2 · Architectures and Middleware</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m05-processes-concurrency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 3 · Processes, Virtualization &amp; Distributed Execution</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part II — Communication and Coordination</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m03-rpc/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 4 · Communication I — RPC &amp; Remote Failure</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m12-dht-gossip/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 5 · Communication II — Messaging &amp; Dissemination</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m06-time-causality/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 6 · Coordination I — Time &amp; Causality</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m09-consensus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 7 · Coordination II — Elections &amp; Agreement</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part III — Naming and Replicated State</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m04-architecture-discovery/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 8 · Naming, Discovery &amp; Decentralized Lookup</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m08-replication-consistency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 9 · Replication &amp; Consistency</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part IV — Fault Tolerance</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m07-failures/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 10 · Failure Models, Resilience &amp; Recovery</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m11-transactions-sharding/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 11 · Transactions, Recovery &amp; Distributed State</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Part V — Security and Operations</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/generated/m15-security-byzantine/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Chapter 12 · Security, Trust &amp; Operating Distributed Systems</span></a></li></ul></details></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Explore</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="7"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/history/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">History of Distributed Systems</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/curiosity/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Curiosities</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Final Project</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="8"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/methodology/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Methodology</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">20 Project Topics</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/projects/trademarks/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Third-party references</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Course &amp; Practice</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="9"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/schedule/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Schedule</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/syllabus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Course information</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/course/tools/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Course tools &amp; offline environment</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/labs/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Laboratory index</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/labs/scenarios/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Fault &amp; workload scenarios</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/toolbox/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Distributed systems toolbox</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/references/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Reference library</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/resources/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Practice resources</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-p4azlveh"><div class="social-icons astro-p4azlveh"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Dark</option><option value="light" class="astro-2z5xp7gb">Light</option><option value="auto" selected class="astro-2z5xp7gb">Auto</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Select language</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/generated/m15-security-byzantine/lesson/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/generated/m15-security-byzantine/lesson/" class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-yntsjkba"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-lrzkfocr"><aside class="right-sidebar-container print:hidden astro-lrzkfocr"><div class="right-sidebar astro-lrzkfocr"><div class="lg:sl-hidden astro-qok35upx"><mobile-starlight-toc data-min-h="2" data-max-h="2" class="astro-66cqc7ze"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-66cqc7ze"><details id="starlight__mobile-toc" class="astro-66cqc7ze"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-66cqc7ze"><span class="toggle sl-flex astro-66cqc7ze">On this page<svg aria-hidden="true" class="caret astro-66cqc7ze astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-66cqc7ze"></span></summary><div class="dropdown astro-66cqc7ze"><ul class="isMobile astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Overview</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#before-you-read" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Before you read</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#workload-map" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Workload map</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#why-this-chapter-matters" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Why this chapter matters</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#operating-the-system-evidence-before-explanation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Operating the system: evidence before explanation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#1-security-begins-with-a-threat-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">1. Security begins with a threat model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#2-trust-boundaries-should-be-visible-in-the-architecture" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">2. Trust boundaries should be visible in the architecture</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#3-authentication-and-authorization-solve-different-problems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">3. Authentication and authorization solve different problems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#4-identity-is-more-than-an-address" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">4. Identity is more than an address</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#5-tls-protects-a-channel-not-the-entire-application" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">5. TLS protects a channel, not the entire application</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#6-server-authentication-versus-mutual-authentication" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">6. Server authentication versus mutual authentication</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#7-certificate-validation-is-part-of-the-protocol" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">7. Certificate validation is part of the protocol</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#8-encryption-in-transit-does-not-imply-encryption-at-rest" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">8. Encryption in transit does not imply encryption at rest</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#9-integrity-and-authenticity-do-not-prevent-replay-automatically" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">9. Integrity and authenticity do not prevent replay automatically</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#10-security-and-idempotency-intersect" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">10. Security and idempotency intersect</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#11-authorization-should-follow-least-privilege" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">11. Authorization should follow least privilege</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#12-capability-based-thinking-is-useful-for-autonomous-tools" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">12. Capability-based thinking is useful for autonomous tools</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#13-a-compromised-node-changes-the-failure-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">13. A compromised node changes the failure model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#14-equivocation-is-a-characteristic-byzantine-behavior" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">14. Equivocation is a characteristic Byzantine behavior</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#15-crash-fault-consensus-and-byzantine-consensus-are-not-interchangeable" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">15. Crash-fault consensus and Byzantine consensus are not interchangeable</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#16-byzantine-quorums-require-stronger-redundancy" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">16. Byzantine quorums require stronger redundancy</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#17-pbft-is-a-useful-historical-reference" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">17. PBFT is a useful historical reference</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#18-byzantine-agreement-is-still-about-distributed-system-properties" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">18. Byzantine agreement is still about distributed-system properties</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#19-sybil-attacks-reveal-another-identity-assumption" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">19. Sybil attacks reveal another identity assumption</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#20-distributed-ledgers-are-a-case-study-not-the-definition-of-distributed-systems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">20. Distributed ledgers are a case study, not the definition of distributed systems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#21-proof-of-work-and-proof-of-stake-solve-membershipweight-problems-differently" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">21. Proof of work and proof of stake solve membership/weight problems differently</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#22-permissioned-versus-permissionless-changes-the-system-problem" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">22. Permissioned versus permissionless changes the system problem</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#23-security-failures-can-look-like-ordinary-distributed-failures" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">23. Security failures can look like ordinary distributed failures</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#24-logging-and-tracing-become-security-sensitive" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">24. Logging and tracing become security-sensitive</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#25-audit-logs-need-stronger-properties-than-debug-logs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">25. Audit logs need stronger properties than debug logs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#26-secrets-are-distributed-state-too" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">26. Secrets are distributed state too</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#27-compromised-workers-are-especially-relevant-in-job-systems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">27. Compromised workers are especially relevant in job systems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#28-sandboxing-and-byzantine-correctness-are-different" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">28. Sandboxing and Byzantine correctness are different</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#29-modern-cloud-architectures-combine-many-trust-domains" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">29. Modern cloud architectures combine many trust domains</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#30-zero-trust-language-is-less-important-than-explicit-verification" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">30. Zero-trust language is less important than explicit verification</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#31-agentic-systems-make-delegation-visible" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">31. Agentic systems make delegation visible</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#32-agent-to-agent-communication-does-not-remove-ordinary-distributed-system-problems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">32. Agent-to-agent communication does not remove ordinary distributed-system problems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#33-tool-descriptions-are-not-security-policy" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">33. Tool descriptions are not security policy</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#34-prompt-injection-is-an-application-layer-trust-problem" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">34. Prompt injection is an application-layer trust problem</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#35-validation-belongs-at-every-external-boundary" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">35. Validation belongs at every external boundary</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#36-resource-exhaustion-is-both-availability-and-security" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">36. Resource exhaustion is both availability and security</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#37-byzantine-tolerance-has-performance-costs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">37. Byzantine tolerance has performance costs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#38-not-every-compromised-component-should-trigger-byzantine-consensus" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">38. Not every compromised component should trigger Byzantine consensus</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#39-final-project-trust-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">39. Final-project trust model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#40-threat-model-one-historical-project" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">40. Threat-model one historical project</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#41-threat-model-one-modern-project" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">41. Threat-model one modern project</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#42-worked-example--authenticated-request-but-unauthorized-action" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">42. Worked example — authenticated request but unauthorized action</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#43-worked-example--replayed-transfer" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">43. Worked example — replayed transfer</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#44-worked-example--malicious-replica-equivocation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">44. Worked example — malicious replica equivocation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#45-worked-example--agent-tool-timeout" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">45. Worked example — agent tool timeout</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#46-historical-perspective--stronger-failure-models-followed-deployment-needs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">46. Historical perspective — stronger failure models followed deployment needs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#47-common-mistakes" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">47. Common mistakes</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#50-laboratory-transition" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">50. Laboratory transition</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#chapter-summary" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Chapter summary</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/distributed-systems-2026/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-qok35upx"><div class="sl-container astro-qok35upx"><starlight-toc data-min-h="2" data-max-h="2"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Overview</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#before-you-read" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Before you read</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#workload-map" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Workload map</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#why-this-chapter-matters" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Why this chapter matters</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#operating-the-system-evidence-before-explanation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Operating the system: evidence before explanation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#1-security-begins-with-a-threat-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">1. Security begins with a threat model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#2-trust-boundaries-should-be-visible-in-the-architecture" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">2. Trust boundaries should be visible in the architecture</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#3-authentication-and-authorization-solve-different-problems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">3. Authentication and authorization solve different problems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#4-identity-is-more-than-an-address" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">4. Identity is more than an address</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#5-tls-protects-a-channel-not-the-entire-application" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">5. TLS protects a channel, not the entire application</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#6-server-authentication-versus-mutual-authentication" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">6. Server authentication versus mutual authentication</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#7-certificate-validation-is-part-of-the-protocol" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">7. Certificate validation is part of the protocol</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#8-encryption-in-transit-does-not-imply-encryption-at-rest" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">8. Encryption in transit does not imply encryption at rest</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#9-integrity-and-authenticity-do-not-prevent-replay-automatically" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">9. Integrity and authenticity do not prevent replay automatically</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#10-security-and-idempotency-intersect" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">10. Security and idempotency intersect</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#11-authorization-should-follow-least-privilege" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">11. Authorization should follow least privilege</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#12-capability-based-thinking-is-useful-for-autonomous-tools" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">12. Capability-based thinking is useful for autonomous tools</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#13-a-compromised-node-changes-the-failure-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">13. A compromised node changes the failure model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#14-equivocation-is-a-characteristic-byzantine-behavior" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">14. Equivocation is a characteristic Byzantine behavior</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#15-crash-fault-consensus-and-byzantine-consensus-are-not-interchangeable" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">15. Crash-fault consensus and Byzantine consensus are not interchangeable</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#16-byzantine-quorums-require-stronger-redundancy" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">16. Byzantine quorums require stronger redundancy</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#17-pbft-is-a-useful-historical-reference" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">17. PBFT is a useful historical reference</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#18-byzantine-agreement-is-still-about-distributed-system-properties" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">18. Byzantine agreement is still about distributed-system properties</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#19-sybil-attacks-reveal-another-identity-assumption" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">19. Sybil attacks reveal another identity assumption</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#20-distributed-ledgers-are-a-case-study-not-the-definition-of-distributed-systems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">20. Distributed ledgers are a case study, not the definition of distributed systems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#21-proof-of-work-and-proof-of-stake-solve-membershipweight-problems-differently" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">21. Proof of work and proof of stake solve membership/weight problems differently</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#22-permissioned-versus-permissionless-changes-the-system-problem" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">22. Permissioned versus permissionless changes the system problem</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#23-security-failures-can-look-like-ordinary-distributed-failures" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">23. Security failures can look like ordinary distributed failures</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#24-logging-and-tracing-become-security-sensitive" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">24. Logging and tracing become security-sensitive</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#25-audit-logs-need-stronger-properties-than-debug-logs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">25. Audit logs need stronger properties than debug logs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#26-secrets-are-distributed-state-too" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">26. Secrets are distributed state too</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#27-compromised-workers-are-especially-relevant-in-job-systems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">27. Compromised workers are especially relevant in job systems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#28-sandboxing-and-byzantine-correctness-are-different" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">28. Sandboxing and Byzantine correctness are different</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#29-modern-cloud-architectures-combine-many-trust-domains" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">29. Modern cloud architectures combine many trust domains</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#30-zero-trust-language-is-less-important-than-explicit-verification" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">30. Zero-trust language is less important than explicit verification</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#31-agentic-systems-make-delegation-visible" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">31. Agentic systems make delegation visible</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#32-agent-to-agent-communication-does-not-remove-ordinary-distributed-system-problems" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">32. Agent-to-agent communication does not remove ordinary distributed-system problems</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#33-tool-descriptions-are-not-security-policy" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">33. Tool descriptions are not security policy</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#34-prompt-injection-is-an-application-layer-trust-problem" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">34. Prompt injection is an application-layer trust problem</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#35-validation-belongs-at-every-external-boundary" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">35. Validation belongs at every external boundary</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#36-resource-exhaustion-is-both-availability-and-security" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">36. Resource exhaustion is both availability and security</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#37-byzantine-tolerance-has-performance-costs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">37. Byzantine tolerance has performance costs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#38-not-every-compromised-component-should-trigger-byzantine-consensus" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">38. Not every compromised component should trigger Byzantine consensus</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#39-final-project-trust-model" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">39. Final-project trust model</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#40-threat-model-one-historical-project" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">40. Threat-model one historical project</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#41-threat-model-one-modern-project" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">41. Threat-model one modern project</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#42-worked-example--authenticated-request-but-unauthorized-action" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">42. Worked example — authenticated request but unauthorized action</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#43-worked-example--replayed-transfer" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">43. Worked example — replayed transfer</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#44-worked-example--malicious-replica-equivocation" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">44. Worked example — malicious replica equivocation</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#45-worked-example--agent-tool-timeout" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">45. Worked example — agent tool timeout</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#46-historical-perspective--stronger-failure-models-followed-deployment-needs" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">46. Historical perspective — stronger failure models followed deployment needs</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#47-common-mistakes" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">47. Common mistakes</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#50-laboratory-transition" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">50. Laboratory transition</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#chapter-summary" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Chapter summary</span></a></li></ul></nav></starlight-toc><script type="module" src="/distributed-systems-2026/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-lrzkfocr"><main data-pagefind-body class="astro-g5ptsecz" lang="en" dir="ltr"><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><h1 id="_top" class="astro-bebwqqxs">Security, Trust, and Operating Distributed Systems — Lesson</h1></div></div><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><div class="sl-markdown-content"><p class="ds-book-part">Part V — Security and Operations</p>
+<div class="ds-lesson-banner">
+  <div><span>Course step</span><strong>Chapter 12</strong></div>
+  <div><span>Core reading</span><strong>40 min–55 min</strong></div>
+  <div><span>Required path</span><strong>Read → Practice target → Check → Lab</strong></div>
+</div>
+<div class="ds-progress" aria-label="Course progress">
+  <div class="ds-progress-meta">
+    <span>Chapter 12 of 12</span>
+    <span>100% through the course sequence</span>
+  </div>
+  <div class="ds-progress-track"><span style="width: 100%"></span></div>
+</div>
+<blockquote>
+<p><strong>Guiding question:</strong> What changes when a participant may be unauthorized, compromised, malicious, overloaded, or simply hard to diagnose?</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="before-you-read">Before you read</h2><a class="sl-anchor-link" href="#before-you-read"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Before you read”</span></a></div>
+<blockquote>
+<p>A request is slow and eventually succeeds, but the caller was unauthorized. Which evidence belongs to performance diagnosis, which to security, and which to both?</p>
+</blockquote>
+<p>Write a short answer first. You are not expected to be correct yet; you need a prediction you can revise as the chapter gives you better models and evidence.</p>
+<p><strong>Use what you already know:</strong> The complete service built across the course: communication, naming, coordination, replication, recovery, and evidence.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="workload-map">Workload map</h2><a class="sl-anchor-link" href="#workload-map"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Workload map”</span></a></div>
+<div class="ds-workload ds-workload-three" aria-label="Core workload">
+  <div><span>Core · read</span><strong>Cohesive lesson</strong><small>40 min–55 min</small></div>
+  <div><span>Core · practice</span><strong>Practice target + check</strong><small>45 min–1 h 10 min</small></div>
+  <div><span>Core · lab</span><strong>Evidence laboratory</strong><small>2 h–3 h · 8 public tests + evidence</small></div>
+</div>
+<p class="ds-workload-note"><strong>Practice / challenge bank:</strong> The guided-practice and knowledge-check pages identify the exact core cases. The remaining cases, optional extensions, and advanced references are not part of the core workload unless your instructor assigns them.</p>
+<p class="ds-offline-link"><span>OFFLINE</span><a href="../../../downloads/en/m15-security-byzantine.zip" download>Download lesson + practice + lab for offline study (.zip)</a></p>
+<div class="sl-heading-wrapper level-h2"><h2 id="why-this-chapter-matters">Why this chapter matters</h2><a class="sl-anchor-link" href="#why-this-chapter-matters"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Why this chapter matters”</span></a></div>
+<p>Most of the course has assumed <strong>non-malicious failure</strong>. A process may crash, become slow, lose messages, restart with stale state, or become separated by a network partition, but it does not intentionally forge another node’s identity or send contradictory messages to different peers.</p>
+<p>That assumption is extremely useful. It is also a boundary.</p>
+<p>Real distributed systems cross administrative domains, expose APIs to untrusted clients, execute third-party workloads, store secrets, and increasingly allow autonomous software agents to invoke tools and services. Once a node or client may behave adversarially, many earlier mechanisms need stronger assumptions and stronger evidence.</p>
+<p>The guiding question is:</p>
+<blockquote>
+<p><strong>What changes when a participant may be unauthorized, compromised, malicious, overloaded, or simply hard to diagnose?</strong></p>
+</blockquote>
+<p>The short answer is that trust and operation become part of correctness. Identity, authority, replay protection, resource limits, latency evidence, backpressure, auditability, and protocol design must all be explicit.</p>
+<p>Before the security mechanisms, keep one operational rule:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>request ID / trace ID</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>structured events</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>latency + queue + error measurements</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>claim about what happened</span></span></code></pre>
+<p>Averages can hide tail latency. Retries can amplify overload. A healthy process can still be an unhealthy service. Logs and traces must therefore help you answer <em>which request, which node, which state transition, and which delay</em> without leaking secrets.</p>
+<p>Use the local toolbox for load generation, latency distributions, queue/backpressure experiments, correlation identifiers, and trace reasoning. No hosted observability backend is required.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="operating-the-system-evidence-before-explanation">Operating the system: evidence before explanation</h2><a class="sl-anchor-link" href="#operating-the-system-evidence-before-explanation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Operating the system: evidence before explanation”</span></a></div>
+<p>A distributed system can be correct in its normal trace and still fail its users under load.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="averages-hide-tails">Averages hide tails</h3><a class="sl-anchor-link" href="#averages-hide-tails"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Averages hide tails”</span></a></div>
+<p>Suppose 99 requests finish in 10 ms and one finishes in 5 seconds.</p>
+<p>The mean may still look modest compared with the user’s experience of the slow request. Record distributions or percentiles rather than one average:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>p50</span></span>
+<span class="line"><span>p95</span></span>
+<span class="line"><span>p99</span></span>
+<span class="line"><span>max / timeout rate</span></span></code></pre>
+<p>Tail latency matters because one user operation may depend on several downstream calls. A slow dependency can dominate the whole path.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="queues-reveal-pressure-before-failure-becomes-obvious">Queues reveal pressure before failure becomes obvious</h3><a class="sl-anchor-link" href="#queues-reveal-pressure-before-failure-becomes-obvious"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Queues reveal pressure before failure becomes obvious”</span></a></div>
+<p>If arrivals exceed service capacity, work accumulates:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>arrival rate &gt; service rate</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>queue grows</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>latency grows</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>timeouts/retries</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>more offered load</span></span></code></pre>
+<p>Backpressure, bounded queues, admission control, and load shedding are ways to keep overload from becoming unbounded hidden work.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="correlation-turns-logs-into-a-distributed-explanation">Correlation turns logs into a distributed explanation</h3><a class="sl-anchor-link" href="#correlation-turns-logs-into-a-distributed-explanation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Correlation turns logs into a distributed explanation”</span></a></div>
+<p>A useful event record contains enough stable identity to join observations:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>request_id</span></span>
+<span class="line"><span>trace_id</span></span>
+<span class="line"><span>node_id / incarnation</span></span>
+<span class="line"><span>operation</span></span>
+<span class="line"><span>start/end or duration</span></span>
+<span class="line"><span>outcome</span></span>
+<span class="line"><span>relevant state/version</span></span></code></pre>
+<p>Without correlation, ten individually correct log lines may still fail to reconstruct one request.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="diagnose-with-competing-hypotheses">Diagnose with competing hypotheses</h3><a class="sl-anchor-link" href="#diagnose-with-competing-hypotheses"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Diagnose with competing hypotheses”</span></a></div>
+<p>When latency rises, do not begin with “the network is slow.”</p>
+<p>Write competing explanations:</p>
+<ul>
+<li>queueing at the service;</li>
+<li>slow storage;</li>
+<li>retries amplifying load;</li>
+<li>one lagging replica;</li>
+<li>expensive serialization;</li>
+<li>network delay;</li>
+<li>authorization or validation work;</li>
+<li>an overloaded downstream dependency.</li>
+</ul>
+<p>Then ask which metric, trace span, log event, packet observation, or state snapshot could distinguish them.</p>
+<blockquote>
+<p><strong>Pause and predict.</strong> Throughput is flat, CPU is 40%, p99 latency triples, and the request queue grows steadily. Which observation argues against “CPU saturation” as the primary cause? What evidence would you collect next?</p>
+</blockquote>
+<p>Operational evidence is not separate from security. The same traces that help diagnose a request can leak credentials or sensitive payloads, and the same rate/queue controls that stabilize overload can limit resource-exhaustion attacks.</p>
+<aside class="ds-book-note ds-history">
+  <span class="ds-book-note-label">History</span>
+  <strong>Cloud control planes turned reconciliation, leases, service discovery, and consensus into ordinary operational machinery</strong>
+  <p>Modern orchestration and coordination platforms made distributed control loops visible to application engineers: desired state, observed state, leader election, watch streams, health, and automatic repair became standard infrastructure concepts.</p>
+  <a class="ds-book-note-source" href="../../../history/cloud-control-planes/">Read the design history →</a>
+</aside>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-security-begins-with-a-threat-model">1. Security begins with a threat model</h2><a class="sl-anchor-link" href="#1-security-begins-with-a-threat-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “1. Security begins with a threat model”</span></a></div>
+<p>A useful threat model states:</p>
+<ul>
+<li>what assets matter;</li>
+<li>who the principals are;</li>
+<li>which components are trusted;</li>
+<li>which components may be compromised;</li>
+<li>which communication paths are exposed;</li>
+<li>what an attacker can read, modify, replay, forge, delay, or suppress;</li>
+<li>which failures are outside scope.</li>
+</ul>
+<p>Without this, statements such as “the system is secure” are not testable.</p>
+<p>For a three-node replicated store, possible assets include:</p>
+<ul>
+<li>client data;</li>
+<li>credentials;</li>
+<li>replica state;</li>
+<li>authorization policy;</li>
+<li>service private keys;</li>
+<li>audit logs.</li>
+</ul>
+<p>Possible adversaries include:</p>
+<ul>
+<li>unauthenticated Internet clients;</li>
+<li>authenticated but unauthorized users;</li>
+<li>a compromised worker node;</li>
+<li>a malicious administrator;</li>
+<li>a network attacker able to observe or modify traffic.</li>
+</ul>
+<p>Different threat models produce different architectures.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-trust-boundaries-should-be-visible-in-the-architecture">2. Trust boundaries should be visible in the architecture</h2><a class="sl-anchor-link" href="#2-trust-boundaries-should-be-visible-in-the-architecture"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “2. Trust boundaries should be visible in the architecture”</span></a></div>
+<p>A trust boundary is a point where assumptions change.</p>
+<p>For example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>Untrusted client</span></span>
+<span class="line"><span>      |</span></span>
+<span class="line"><span>      v</span></span>
+<span class="line"><span>+------------------+</span></span>
+<span class="line"><span>| Public API       |</span></span>
+<span class="line"><span>+------------------+</span></span>
+<span class="line"><span>      |</span></span>
+<span class="line"><span>      | authenticated identity</span></span>
+<span class="line"><span>      v</span></span>
+<span class="line"><span>+------------------+</span></span>
+<span class="line"><span>| Internal service |</span></span>
+<span class="line"><span>+------------------+</span></span>
+<span class="line"><span>      |</span></span>
+<span class="line"><span>      | service identity</span></span>
+<span class="line"><span>      v</span></span>
+<span class="line"><span>+------------------+</span></span>
+<span class="line"><span>| Storage          |</span></span>
+<span class="line"><span>+------------------+</span></span></code></pre>
+<p>Do not draw all boxes as equally trusted.</p>
+<p>Questions to ask at every boundary:</p>
+<ol>
+<li>How is the caller identified?</li>
+<li>What is the caller allowed to do?</li>
+<li>Is traffic confidential?</li>
+<li>Is message integrity protected?</li>
+<li>Can old valid messages be replayed?</li>
+<li>What evidence is recorded for later audit?</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-authentication-and-authorization-solve-different-problems">3. Authentication and authorization solve different problems</h2><a class="sl-anchor-link" href="#3-authentication-and-authorization-solve-different-problems"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “3. Authentication and authorization solve different problems”</span></a></div>
+<p><strong>Authentication</strong> answers:</p>
+<blockquote>
+<p>Who is this principal?</p>
+</blockquote>
+<p><strong>Authorization</strong> answers:</p>
+<blockquote>
+<p>Is this principal permitted to perform this action on this resource?</p>
+</blockquote>
+<p>A client can be perfectly authenticated and still be unauthorized.</p>
+<p>Example:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>identity = student-17</span></span>
+<span class="line"><span>operation = DELETE project/p02</span></span></code></pre>
+<p>Authentication may prove the request originated from <code dir="auto">student-17</code>.</p>
+<p>Authorization must still decide whether <code dir="auto">student-17</code> owns or administers that resource.</p>
+<p>Do not merge these two checks conceptually.</p>
+<figure class="ds-book-figure">
+  <img src="../../../assets/book/m15-trust-boundaries.svg" alt="Client, gateway, service, and storage separated by explicit identity and authorization boundaries." loading="lazy" decoding="async" />
+  <figcaption><span>Figure</span>Network reachability is not identity, and identity is not authority. Each boundary needs an explicit trust decision and observable enforcement.</figcaption>
+</figure>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-identity-is-more-than-an-address">4. Identity is more than an address</h2><a class="sl-anchor-link" href="#4-identity-is-more-than-an-address"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “4. Identity is more than an address”</span></a></div>
+<p>Chapter 8 separated names, IDs, addresses, and process incarnations. Security strengthens that distinction.</p>
+<p>An IP address is normally a weak identity claim. Addresses can change, be reused, exist behind proxies, or be spoofed in some contexts.</p>
+<p>Service identity should usually be tied to a cryptographic credential or authenticated channel rather than merely:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>10.0.0.8 means replica-2</span></span></code></pre>
+<p>The authenticated statement should be closer to:</p>
+<blockquote>
+<p>the peer presenting this credential is authorized to act as replica-2.</p>
+</blockquote>
+<div class="sl-heading-wrapper level-h2"><h2 id="5-tls-protects-a-channel-not-the-entire-application">5. TLS protects a channel, not the entire application</h2><a class="sl-anchor-link" href="#5-tls-protects-a-channel-not-the-entire-application"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “5. TLS protects a channel, not the entire application”</span></a></div>
+<p>TLS can provide important channel properties such as:</p>
+<ul>
+<li>confidentiality;</li>
+<li>integrity;</li>
+<li>peer authentication when configured appropriately.</li>
+</ul>
+<p>But a TLS connection does not establish that every application request is authorized or semantically valid.</p>
+<p>A malicious authenticated client can still send dangerous requests.</p>
+<p>A compromised authenticated server can still return incorrect data.</p>
+<p>So:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>TLS</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>authorization</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>application validation</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>distributed consensus</span></span></code></pre>
+<p>These are different layers.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="6-server-authentication-versus-mutual-authentication">6. Server authentication versus mutual authentication</h2><a class="sl-anchor-link" href="#6-server-authentication-versus-mutual-authentication"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “6. Server authentication versus mutual authentication”</span></a></div>
+<p>In a common client/server deployment, the client authenticates the server using a certificate chain.</p>
+<p>For internal distributed systems, <strong>mutual TLS (mTLS)</strong> may be useful because both sides authenticate one another.</p>
+<p>Conceptually:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>Client verifies Server</span></span>
+<span class="line"><span>Server verifies Client</span></span></code></pre>
+<p>The server then maps the authenticated client/service identity to an authorization policy.</p>
+<p>mTLS can be useful for service-to-service communication, but it adds certificate issuance, rotation, revocation, and operational complexity.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="7-certificate-validation-is-part-of-the-protocol">7. Certificate validation is part of the protocol</h2><a class="sl-anchor-link" href="#7-certificate-validation-is-part-of-the-protocol"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “7. Certificate validation is part of the protocol”</span></a></div>
+<p>A secure channel is only as meaningful as its verification policy.</p>
+<p>Common mistakes include:</p>
+<ul>
+<li>disabling certificate verification during development and leaving it disabled;</li>
+<li>accepting any certificate signed by a broad authority without checking expected service identity;</li>
+<li>ignoring certificate expiration;</li>
+<li>failing to rotate credentials;</li>
+<li>putting private keys in source repositories.</li>
+</ul>
+<p>The course does not require production PKI engineering, but you should understand that certificates are assertions bound to trust policy, not magical encryption files.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="8-encryption-in-transit-does-not-imply-encryption-at-rest">8. Encryption in transit does not imply encryption at rest</h2><a class="sl-anchor-link" href="#8-encryption-in-transit-does-not-imply-encryption-at-rest"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “8. Encryption in transit does not imply encryption at rest”</span></a></div>
+<p>A message can be encrypted while crossing the network and later stored unencrypted on disk.</p>
+<p>Similarly, a database may encrypt disks while application logs expose sensitive fields in plaintext.</p>
+<p>Threat analysis should separate:</p>
+<ul>
+<li>data in transit;</li>
+<li>data at rest;</li>
+<li>data in process memory;</li>
+<li>secrets in configuration;</li>
+<li>data copied into logs/traces.</li>
+</ul>
+<p>Observability itself creates security obligations.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="9-integrity-and-authenticity-do-not-prevent-replay-automatically">9. Integrity and authenticity do not prevent replay automatically</h2><a class="sl-anchor-link" href="#9-integrity-and-authenticity-do-not-prevent-replay-automatically"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “9. Integrity and authenticity do not prevent replay automatically”</span></a></div>
+<p>Suppose a valid authenticated request says:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>transfer 100 from A to B</span></span></code></pre>
+<p>An attacker who cannot modify the message might still replay the exact valid message if the protocol permits it.</p>
+<p>This connects directly to Chapter 4’s request identifiers and deduplication.</p>
+<p>Useful replay defenses can include:</p>
+<ul>
+<li>unique request IDs;</li>
+<li>sequence numbers;</li>
+<li>nonces;</li>
+<li>expiration windows;</li>
+<li>application-level deduplication.</li>
+</ul>
+<p>The correct mechanism depends on the protocol.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="10-security-and-idempotency-intersect">10. Security and idempotency intersect</h2><a class="sl-anchor-link" href="#10-security-and-idempotency-intersect"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “10. Security and idempotency intersect”</span></a></div>
+<p>A duplicate may arise accidentally through a retry or intentionally through replay.</p>
+<p>The service should not need to guess which happened.</p>
+<p>If the operation semantics require one logical effect, the same duplicate-suppression mechanisms can protect both reliability and security properties.</p>
+<p>This is an example of one mechanism supporting multiple concerns.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="11-authorization-should-follow-least-privilege">11. Authorization should follow least privilege</h2><a class="sl-anchor-link" href="#11-authorization-should-follow-least-privilege"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “11. Authorization should follow least privilege”</span></a></div>
+<p>A service should receive only the capabilities required for its role.</p>
+<p>For example, a worker that performs image resizing may need:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>read input object</span></span>
+<span class="line"><span>write result object</span></span>
+<span class="line"><span>update own job status</span></span></code></pre>
+<p>It may not need:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>delete arbitrary users</span></span>
+<span class="line"><span>change cluster membership</span></span>
+<span class="line"><span>read every secret</span></span></code></pre>
+<p>Reducing authority limits the damage of compromise.</p>
+<p>This becomes especially important in agentic systems where software can autonomously invoke tools.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="12-capability-based-thinking-is-useful-for-autonomous-tools">12. Capability-based thinking is useful for autonomous tools</h2><a class="sl-anchor-link" href="#12-capability-based-thinking-is-useful-for-autonomous-tools"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “12. Capability-based thinking is useful for autonomous tools”</span></a></div>
+<p>An agent that can call a tool is effectively being granted authority.</p>
+<p>The meaningful question is not:</p>
+<blockquote>
+<p>Is this agent intelligent?</p>
+</blockquote>
+<p>It is:</p>
+<blockquote>
+<p>What operations can this principal perform, on which resources, under which constraints?</p>
+</blockquote>
+<p>A tool interface that allows:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>read_calendar</span></span></code></pre>
+<p>has a different risk profile from:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>send_email</span></span></code></pre>
+<p>or:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>execute_shell_command</span></span></code></pre>
+<p>Agentic infrastructure should therefore be analyzed with ordinary security concepts:</p>
+<ul>
+<li>identity;</li>
+<li>delegation;</li>
+<li>least privilege;</li>
+<li>explicit scopes;</li>
+<li>audit trails;</li>
+<li>idempotency;</li>
+<li>confirmation boundaries;</li>
+<li>revocation.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="13-a-compromised-node-changes-the-failure-model">13. A compromised node changes the failure model</h2><a class="sl-anchor-link" href="#13-a-compromised-node-changes-the-failure-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “13. A compromised node changes the failure model”</span></a></div>
+<p>In crash-fault systems, a faulty node generally stops contributing useful responses.</p>
+<p>A Byzantine node may behave <strong>arbitrarily</strong>.</p>
+<p>It might:</p>
+<ul>
+<li>lie about its state;</li>
+<li>send one value to node A and another to node B;</li>
+<li>forge data if credentials permit;</li>
+<li>omit selected messages;</li>
+<li>replay old messages;</li>
+<li>claim to have persisted data it did not persist;</li>
+<li>collude with other faulty nodes.</li>
+</ul>
+<p>This is fundamentally harder than a simple crash.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="14-equivocation-is-a-characteristic-byzantine-behavior">14. Equivocation is a characteristic Byzantine behavior</h2><a class="sl-anchor-link" href="#14-equivocation-is-a-characteristic-byzantine-behavior"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “14. Equivocation is a characteristic Byzantine behavior”</span></a></div>
+<p>Consider node X telling two peers:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>To A: value = red</span></span>
+<span class="line"><span>To B: value = blue</span></span></code></pre>
+<p>A crash-only protocol may never have been designed to handle this contradiction.</p>
+<p>In Byzantine settings, protocols often need authenticated messages, quorum structures, and evidence that allows honest replicas to detect or tolerate inconsistent statements.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="15-crash-fault-consensus-and-byzantine-consensus-are-not-interchangeable">15. Crash-fault consensus and Byzantine consensus are not interchangeable</h2><a class="sl-anchor-link" href="#15-crash-fault-consensus-and-byzantine-consensus-are-not-interchangeable"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “15. Crash-fault consensus and Byzantine consensus are not interchangeable”</span></a></div>
+<p>Raft assumes a crash-fault model. A node may fail or become unreachable, but the algorithm is not designed for a replica intentionally fabricating protocol messages while still participating.</p>
+<p>This does <strong>not</strong> make Raft insecure or useless.</p>
+<p>It means its correctness theorem has a defined assumption boundary.</p>
+<p>Always state:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>protocol guarantee</span></span>
+<span class="line"><span>under</span></span>
+<span class="line"><span>failure model</span></span></code></pre>
+<p>rather than claiming a protocol “handles failures” generically.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="16-byzantine-quorums-require-stronger-redundancy">16. Byzantine quorums require stronger redundancy</h2><a class="sl-anchor-link" href="#16-byzantine-quorums-require-stronger-redundancy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “16. Byzantine quorums require stronger redundancy”</span></a></div>
+<p>For many classic Byzantine fault-tolerant designs, tolerating <code dir="auto">f</code> Byzantine replicas requires at least:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>n &gt;= 3f + 1</span></span></code></pre>
+<p>and decisions often require evidence from at least:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>2f + 1</span></span></code></pre>
+<p>replicas.</p>
+<p>Why?</p>
+<p>Because quorums must overlap in enough replicas that contradictory decisions cannot both be supported solely through faulty participants.</p>
+<p>For <code dir="auto">f = 1</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>n &gt;= 4</span></span></code></pre>
+<p>This is already more expensive than the three-node crash-fault cluster used in many earlier exercises.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="17-pbft-is-a-useful-historical-reference">17. PBFT is a useful historical reference</h2><a class="sl-anchor-link" href="#17-pbft-is-a-useful-historical-reference"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “17. PBFT is a useful historical reference”</span></a></div>
+<p>Practical Byzantine Fault Tolerance (PBFT) demonstrated that Byzantine fault tolerance could be engineered for practical replicated services under appropriate deployment assumptions.</p>
+<p>You do not need to implement full PBFT in this course.</p>
+<p>Instead, use it to compare:</p>
+<ul>
+<li>failure model;</li>
+<li>replica count;</li>
+<li>quorum intersection;</li>
+<li>message complexity;</li>
+<li>authentication assumptions;</li>
+<li>view/leader changes;</li>
+<li>performance trade-offs.</li>
+</ul>
+<p>The central lesson is architectural: stronger adversary models cost more.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="18-byzantine-agreement-is-still-about-distributed-system-properties">18. Byzantine agreement is still about distributed-system properties</h2><a class="sl-anchor-link" href="#18-byzantine-agreement-is-still-about-distributed-system-properties"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “18. Byzantine agreement is still about distributed-system properties”</span></a></div>
+<p>Do not reduce BFT to cryptography.</p>
+<p>Cryptographic signatures or MACs can provide authenticity/integrity evidence, but they do not by themselves cause replicas to agree.</p>
+<p>Agreement still requires a protocol that reasons about:</p>
+<ul>
+<li>messages;</li>
+<li>quorums;</li>
+<li>rounds/views;</li>
+<li>failures;</li>
+<li>progress assumptions.</li>
+</ul>
+<p>Similarly:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>signatures != consensus</span></span></code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="19-sybil-attacks-reveal-another-identity-assumption">19. Sybil attacks reveal another identity assumption</h2><a class="sl-anchor-link" href="#19-sybil-attacks-reveal-another-identity-assumption"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “19. Sybil attacks reveal another identity assumption”</span></a></div>
+<p>In an open system, one physical attacker might create many apparent identities.</p>
+<p>If the protocol says:</p>
+<blockquote>
+<p>majority of identities decides</p>
+</blockquote>
+<p>but identities are cheap to create, a majority may be cheap to fabricate.</p>
+<p>Permissioned systems can rely on controlled membership.</p>
+<p>Open membership systems need a different mechanism for deciding who has voting weight or participation rights.</p>
+<p>This is one reason blockchain and distributed-ledger systems often introduce economic or resource-based admission mechanisms.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="20-distributed-ledgers-are-a-case-study-not-the-definition-of-distributed-systems">20. Distributed ledgers are a case study, not the definition of distributed systems</h2><a class="sl-anchor-link" href="#20-distributed-ledgers-are-a-case-study-not-the-definition-of-distributed-systems"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “20. Distributed ledgers are a case study, not the definition of distributed systems”</span></a></div>
+<p>The historical course used proof-of-work and proof-of-stake near coordination topics. In this redesign they appear late, after you already understand:</p>
+<ul>
+<li>failure models;</li>
+<li>replication;</li>
+<li>quorum intersection;</li>
+<li>consensus;</li>
+<li>state-machine replication;</li>
+<li>security boundaries.</li>
+</ul>
+<p>This ordering makes it possible to ask better questions.</p>
+<p>A ledger may need:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>ordered transactions</span></span>
+<span class="line"><span>replicated state</span></span>
+<span class="line"><span>membership/admission rules</span></span>
+<span class="line"><span>Byzantine tolerance</span></span>
+<span class="line"><span>economic incentives</span></span>
+<span class="line"><span>cryptographic integrity</span></span></code></pre>
+<p>These are related but distinct mechanisms.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="21-proof-of-work-and-proof-of-stake-solve-membershipweight-problems-differently">21. Proof of work and proof of stake solve membership/weight problems differently</h2><a class="sl-anchor-link" href="#21-proof-of-work-and-proof-of-stake-solve-membershipweight-problems-differently"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “21. Proof of work and proof of stake solve membership/weight problems differently”</span></a></div>
+<p>In open networks, there may be no fixed list of trusted replicas.</p>
+<p>Proof-of-work associates influence with computational expenditure.</p>
+<p>Proof-of-stake associates participation/influence with stake under a protocol’s economic rules.</p>
+<p>Neither concept should be presented as a universal replacement for Raft/Paxos/PBFT.</p>
+<p>They are responses to different deployment and adversary assumptions.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="22-permissioned-versus-permissionless-changes-the-system-problem">22. Permissioned versus permissionless changes the system problem</h2><a class="sl-anchor-link" href="#22-permissioned-versus-permissionless-changes-the-system-problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “22. Permissioned versus permissionless changes the system problem”</span></a></div>
+<p>A university cluster where all replicas are provisioned by one administrator has a different membership problem from a global open network where anonymous parties can join.</p>
+<p>Before choosing an algorithm, ask:</p>
+<ul>
+<li>Who may join?</li>
+<li>Who issues identity?</li>
+<li>Is membership fixed or dynamic?</li>
+<li>Can an attacker cheaply create many participants?</li>
+<li>What fraction of participants may be malicious?</li>
+</ul>
+<p>The answers determine which consensus/security model makes sense.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="23-security-failures-can-look-like-ordinary-distributed-failures">23. Security failures can look like ordinary distributed failures</h2><a class="sl-anchor-link" href="#23-security-failures-can-look-like-ordinary-distributed-failures"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “23. Security failures can look like ordinary distributed failures”</span></a></div>
+<p>A malicious node can intentionally create:</p>
+<ul>
+<li>timeouts;</li>
+<li>stale responses;</li>
+<li>partial replies;</li>
+<li>inconsistent metadata;</li>
+<li>fabricated health reports.</li>
+</ul>
+<p>Therefore observability alone does not automatically distinguish accident from attack.</p>
+<p>Security investigation often needs stronger audit evidence and authenticated identities.</p>
+<aside class="ds-book-note ds-curiosity">
+  <span class="ds-book-note-label">Curiosity</span>
+  <strong>Four replicas may be needed to tolerate one Byzantine fault where three were enough for one crash fault</strong>
+  <p>Stronger adversary models require stronger redundancy and quorum reasoning. A malicious node can equivocate rather than merely disappear, so a crash-fault majority protocol cannot simply be relabeled Byzantine tolerant.</p>
+  <p><strong>Try it:</strong> Use `n >= 3f + 1` for `f = 1` and compare the resulting four-replica requirement with a three-node Raft cluster.</p>
+  <a class="ds-book-note-source" href="../../../curiosity/">More chapter curiosities →</a>
+</aside>
+<div class="sl-heading-wrapper level-h2"><h2 id="24-logging-and-tracing-become-security-sensitive">24. Logging and tracing become security-sensitive</h2><a class="sl-anchor-link" href="#24-logging-and-tracing-become-security-sensitive"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “24. Logging and tracing become security-sensitive”</span></a></div>
+<p>Rich telemetry helps you diagnose the system, but it also creates a warning:</p>
+<p><strong>do not leak secrets into the evidence system.</strong></p>
+<p>Avoid logging:</p>
+<ul>
+<li>passwords;</li>
+<li>bearer tokens;</li>
+<li>private keys;</li>
+<li>raw session secrets;</li>
+<li>unnecessarily sensitive user data.</li>
+</ul>
+<p>A distributed trace can propagate baggage/context through many services. Sensitive metadata can therefore become widely replicated if telemetry is designed carelessly.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="25-audit-logs-need-stronger-properties-than-debug-logs">25. Audit logs need stronger properties than debug logs</h2><a class="sl-anchor-link" href="#25-audit-logs-need-stronger-properties-than-debug-logs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “25. Audit logs need stronger properties than debug logs”</span></a></div>
+<p>Debug logs are primarily operational evidence.</p>
+<p>Audit logs may need to answer:</p>
+<ul>
+<li>who performed an operation;</li>
+<li>what resource was affected;</li>
+<li>when authorization was checked;</li>
+<li>which policy was applied;</li>
+<li>whether the event record has been tampered with.</li>
+</ul>
+<p>Not every project needs a tamper-evident audit system, but you should understand that security auditing has different requirements from ordinary diagnostics.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="26-secrets-are-distributed-state-too">26. Secrets are distributed state too</h2><a class="sl-anchor-link" href="#26-secrets-are-distributed-state-too"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “26. Secrets are distributed state too”</span></a></div>
+<p>Certificates, tokens, API keys, and credentials have life cycles:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>issue</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>distribute</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>use</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>rotate</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>revoke</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>expire</span></span></code></pre>
+<p>Embedding a secret permanently in source code ignores that life cycle.</p>
+<p>For course projects, secrets should be externalized from source and test credentials should be clearly non-production.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="27-compromised-workers-are-especially-relevant-in-job-systems">27. Compromised workers are especially relevant in job systems</h2><a class="sl-anchor-link" href="#27-compromised-workers-are-especially-relevant-in-job-systems"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “27. Compromised workers are especially relevant in job systems”</span></a></div>
+<p>Projects such as:</p>
+<ul>
+<li>distributed build execution;</li>
+<li>tournament execution;</li>
+<li>ML training;</li>
+<li>cluster orchestration</li>
+</ul>
+<p>run code on workers.</p>
+<p>Ask two independent questions:</p>
+<ol>
+<li>Can the submitted workload harm the worker?</li>
+<li>Can a compromised worker lie about the result?</li>
+</ol>
+<p>Container isolation can help with the first.</p>
+<p>It does not automatically solve the second.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="28-sandboxing-and-byzantine-correctness-are-different">28. Sandboxing and Byzantine correctness are different</h2><a class="sl-anchor-link" href="#28-sandboxing-and-byzantine-correctness-are-different"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “28. Sandboxing and Byzantine correctness are different”</span></a></div>
+<p>Suppose a tournament worker executes untrusted player code inside a container.</p>
+<p>The container may limit filesystem/process access.</p>
+<p>But the worker host can still potentially fabricate a match result.</p>
+<p>Isolation protects one boundary.</p>
+<p>Result trust is a separate distributed/security problem.</p>
+<p>This is another recurring pattern of the chapter: one mechanism rarely solves all layers.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="29-modern-cloud-architectures-combine-many-trust-domains">29. Modern cloud architectures combine many trust domains</h2><a class="sl-anchor-link" href="#29-modern-cloud-architectures-combine-many-trust-domains"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “29. Modern cloud architectures combine many trust domains”</span></a></div>
+<p>A simplified cloud service may contain:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>Internet client</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Gateway</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Service mesh / service identity</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Application services</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Databases / queues / object stores</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Cloud control plane</span></span></code></pre>
+<p>Each layer may be operated by different software, identities, permissions, and infrastructure.</p>
+<p>A strong architecture review asks:</p>
+<ul>
+<li>what is trusted at each boundary;</li>
+<li>what credentials cross it;</li>
+<li>what happens when one internal service is compromised;</li>
+<li>which actions require stronger authorization;</li>
+<li>where durable authority actually resides.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="30-zero-trust-language-is-less-important-than-explicit-verification">30. Zero-trust language is less important than explicit verification</h2><a class="sl-anchor-link" href="#30-zero-trust-language-is-less-important-than-explicit-verification"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “30. Zero-trust language is less important than explicit verification”</span></a></div>
+<p>The phrase “zero trust” can become vague.</p>
+<p>For this course, prefer specific statements such as:</p>
+<ul>
+<li>internal service calls are mutually authenticated;</li>
+<li>authorization policy is checked per operation;</li>
+<li>service credentials have bounded scope;</li>
+<li>network location alone is not accepted as authority;</li>
+<li>sensitive operations are audited.</li>
+</ul>
+<p>Specific mechanisms are easier to reason about and test.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="31-agentic-systems-make-delegation-visible">31. Agentic systems make delegation visible</h2><a class="sl-anchor-link" href="#31-agentic-systems-make-delegation-visible"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “31. Agentic systems make delegation visible”</span></a></div>
+<p>Modern agent platforms often connect:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>User</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Agent</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Tool / service</span></span></code></pre>
+<p>The agent may make decisions autonomously, but the tool ultimately performs an action.</p>
+<p>Questions include:</p>
+<ul>
+<li>Which user identity is propagated?</li>
+<li>Does the agent act as itself or on behalf of the user?</li>
+<li>Which scopes were delegated?</li>
+<li>Can the tool distinguish read-only from destructive authority?</li>
+<li>How is approval represented?</li>
+<li>How is a duplicated tool action prevented?</li>
+<li>What happens when the tool succeeds but the agent times out?</li>
+</ul>
+<p>Notice how Chapter 4 reliability semantics return immediately.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="32-agent-to-agent-communication-does-not-remove-ordinary-distributed-system-problems">32. Agent-to-agent communication does not remove ordinary distributed-system problems</h2><a class="sl-anchor-link" href="#32-agent-to-agent-communication-does-not-remove-ordinary-distributed-system-problems"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “32. Agent-to-agent communication does not remove ordinary distributed-system problems”</span></a></div>
+<p>Whether the communicating components are called services, workers, actors, or agents, the platform still faces:</p>
+<ul>
+<li>discovery;</li>
+<li>authentication;</li>
+<li>authorization;</li>
+<li>deadlines;</li>
+<li>retries;</li>
+<li>message validation;</li>
+<li>task persistence;</li>
+<li>observability;</li>
+<li>partial failure.</li>
+</ul>
+<p>Agentic software adds semantic uncertainty, but the infrastructure remains distributed infrastructure.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="33-tool-descriptions-are-not-security-policy">33. Tool descriptions are not security policy</h2><a class="sl-anchor-link" href="#33-tool-descriptions-are-not-security-policy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “33. Tool descriptions are not security policy”</span></a></div>
+<p>An agent may see a tool described as:</p>
+<blockquote>
+<p>“send a calendar invitation”</p>
+</blockquote>
+<p>That human-language description does not enforce which calendars, recipients, or fields the caller is authorized to modify.</p>
+<p>The tool implementation must still validate identity and authorization.</p>
+<p>Never rely on a model instruction as the sole access-control boundary.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="34-prompt-injection-is-an-application-layer-trust-problem">34. Prompt injection is an application-layer trust problem</h2><a class="sl-anchor-link" href="#34-prompt-injection-is-an-application-layer-trust-problem"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “34. Prompt injection is an application-layer trust problem”</span></a></div>
+<p>If an agent reads untrusted content and that content can influence later tool calls, untrusted data has crossed into a control path.</p>
+<p>From a systems viewpoint, ask:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>What input is untrusted?</span></span>
+<span class="line"><span>Which component interprets it?</span></span>
+<span class="line"><span>Which authority can that component exercise?</span></span>
+<span class="line"><span>Where is policy enforced independently?</span></span></code></pre>
+<p>The course does not need to become an AI-security course to teach this correctly. It is an instance of untrusted input influencing privileged action.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="35-validation-belongs-at-every-external-boundary">35. Validation belongs at every external boundary</h2><a class="sl-anchor-link" href="#35-validation-belongs-at-every-external-boundary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “35. Validation belongs at every external boundary”</span></a></div>
+<p>A parser accepting a well-formed Protobuf or JSON message has only established syntax.</p>
+<p>Application validation still needs to enforce constraints such as:</p>
+<ul>
+<li>ranges;</li>
+<li>identities;</li>
+<li>ownership;</li>
+<li>state transitions;</li>
+<li>resource limits;</li>
+<li>authorization.</li>
+</ul>
+<p>Distributed systems often fail when a message is considered “trusted” merely because it came from another internal service.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="36-resource-exhaustion-is-both-availability-and-security">36. Resource exhaustion is both availability and security</h2><a class="sl-anchor-link" href="#36-resource-exhaustion-is-both-availability-and-security"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “36. Resource exhaustion is both availability and security”</span></a></div>
+<p>An attacker may not need to break cryptography.</p>
+<p>They may instead:</p>
+<ul>
+<li>create too many connections;</li>
+<li>submit huge payloads;</li>
+<li>trigger expensive fan-out;</li>
+<li>cause retry amplification;</li>
+<li>exhaust queues;</li>
+<li>force unbounded state creation.</li>
+</ul>
+<p>Admission control and bounded-resource reasoning therefore contribute to security as well as performance.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="37-byzantine-tolerance-has-performance-costs">37. Byzantine tolerance has performance costs</h2><a class="sl-anchor-link" href="#37-byzantine-tolerance-has-performance-costs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “37. Byzantine tolerance has performance costs”</span></a></div>
+<p>Compared with crash-fault replication, BFT commonly increases:</p>
+<ul>
+<li>replica count;</li>
+<li>message exchange;</li>
+<li>verification work;</li>
+<li>protocol complexity;</li>
+<li>state-management complexity.</li>
+</ul>
+<p>That cost may be justified when the threat model requires it.</p>
+<p>It is wasteful when the environment does not.</p>
+<p>Choose the failure model from the deployment assumptions, not from algorithm prestige.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="38-not-every-compromised-component-should-trigger-byzantine-consensus">38. Not every compromised component should trigger Byzantine consensus</h2><a class="sl-anchor-link" href="#38-not-every-compromised-component-should-trigger-byzantine-consensus"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “38. Not every compromised component should trigger Byzantine consensus”</span></a></div>
+<p>Suppose a public API client may be malicious, but all storage replicas run under one trusted administrative domain.</p>
+<p>The correct response may be:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>authenticate client</span></span>
+<span class="line"><span>authorize operation</span></span>
+<span class="line"><span>validate input</span></span>
+<span class="line"><span>rate limit</span></span>
+<span class="line"><span>use ordinary crash-fault replication internally</span></span></code></pre>
+<p>rather than replacing the storage consensus algorithm with PBFT.</p>
+<p>Security architecture is layered.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="39-final-project-trust-model">39. Final-project trust model</h2><a class="sl-anchor-link" href="#39-final-project-trust-model"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “39. Final-project trust model”</span></a></div>
+<p>Every final project should contain a compact trust table.</p>
+<p>Example:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Trusted?</th>
+<th>Identity mechanism</th>
+<th>Main authority</th>
+<th>Failure/adversary assumption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client</td>
+<td>No</td>
+<td>user credential</td>
+<td>own resources</td>
+<td>may send invalid requests</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>Yes</td>
+<td>service credential</td>
+<td>route/authenticate</td>
+<td>crash-fault</td>
+</tr>
+<tr>
+<td>Worker</td>
+<td>Partially</td>
+<td>service identity</td>
+<td>execute assigned work</td>
+<td>may crash; optional compromise analysis</td>
+</tr>
+<tr>
+<td>Storage replicas</td>
+<td>Yes</td>
+<td>service identity</td>
+<td>durable state</td>
+<td>crash-fault</td>
+</tr>
+</tbody>
+</table>
+<p>The table forces hidden assumptions into the open.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="40-threat-model-one-historical-project">40. Threat-model one historical project</h2><a class="sl-anchor-link" href="#40-threat-model-one-historical-project"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “40. Threat-model one historical project”</span></a></div>
+<p>Consider the decentralized messaging project.</p>
+<p>Assets:</p>
+<ul>
+<li>message content;</li>
+<li>contact identity;</li>
+<li>delivery metadata.</li>
+</ul>
+<p>Threats:</p>
+<ul>
+<li>impersonation;</li>
+<li>eavesdropping;</li>
+<li>replay;</li>
+<li>message tampering;</li>
+<li>malicious relay;</li>
+<li>offline recipient.</li>
+</ul>
+<p>Notice that availability and confidentiality interact: relaying/storing messages for offline recipients increases the number of places sensitive data may exist.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="41-threat-model-one-modern-project">41. Threat-model one modern project</h2><a class="sl-anchor-link" href="#41-threat-model-one-modern-project"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “41. Threat-model one modern project”</span></a></div>
+<p>Consider the distributed build executor.</p>
+<p>Assets:</p>
+<ul>
+<li>repository contents;</li>
+<li>build secrets;</li>
+<li>produced artifacts;</li>
+<li>worker hosts.</li>
+</ul>
+<p>Threats:</p>
+<ul>
+<li>malicious submitted code;</li>
+<li>compromised worker;</li>
+<li>artifact substitution;</li>
+<li>secret leakage;</li>
+<li>forged completion result.</li>
+</ul>
+<p>Possible controls map cleanly to course concepts:</p>
+<ul>
+<li>workload isolation;</li>
+<li>authenticated workers;</li>
+<li>content hashes;</li>
+<li>scoped credentials;</li>
+<li>durable job state;</li>
+<li>audit logs.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="42-worked-example--authenticated-request-but-unauthorized-action">42. Worked example — authenticated request but unauthorized action</h2><a class="sl-anchor-link" href="#42-worked-example--authenticated-request-but-unauthorized-action"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “42. Worked example — authenticated request but unauthorized action”</span></a></div>
+<p>Suppose:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>Alice authenticates successfully.</span></span>
+<span class="line"><span>Alice requests DELETE /objects/bob/report.pdf.</span></span></code></pre>
+<p>The channel is encrypted and Alice’s identity is valid.</p>
+<p>The operation must still fail if Alice lacks authority over Bob’s object.</p>
+<p>This simple example prevents a common conceptual collapse:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>secure channel</span></span>
+<span class="line"><span>   !=</span></span>
+<span class="line"><span>allowed operation</span></span></code></pre>
+<div class="sl-heading-wrapper level-h2"><h2 id="43-worked-example--replayed-transfer">43. Worked example — replayed transfer</h2><a class="sl-anchor-link" href="#43-worked-example--replayed-transfer"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “43. Worked example — replayed transfer”</span></a></div>
+<p>Request:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>request_id = R77</span></span>
+<span class="line"><span>operation = transfer(A,B,100)</span></span></code></pre>
+<p>The request is authenticated and integrity-protected.</p>
+<p>The server commits the transfer but the response is lost.</p>
+<p>The client retries R77.</p>
+<p>If the service uses durable request deduplication, it returns the prior result without a second transfer.</p>
+<p>If an attacker later replays the same authenticated message, the same mechanism also prevents another effect, subject to the request-ID retention policy.</p>
+<p>Reliability and security meet at the semantic boundary.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="44-worked-example--malicious-replica-equivocation">44. Worked example — malicious replica equivocation</h2><a class="sl-anchor-link" href="#44-worked-example--malicious-replica-equivocation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “44. Worked example — malicious replica equivocation”</span></a></div>
+<p>Four replicas tolerate one Byzantine fault under a simplified BFT discussion.</p>
+<p>Faulty replica R4 sends:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>value X to R1</span></span>
+<span class="line"><span>value Y to R2</span></span>
+<span class="line"><span>value Y to R3</span></span></code></pre>
+<p>A protocol must not let R4’s contradictory statements create two independently committed outcomes.</p>
+<p>The exact PBFT phases are beyond the implementation requirement, but quorum reasoning should explain why one faulty participant cannot alone create two honest decision quorums.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="45-worked-example--agent-tool-timeout">45. Worked example — agent tool timeout</h2><a class="sl-anchor-link" href="#45-worked-example--agent-tool-timeout"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “45. Worked example — agent tool timeout”</span></a></div>
+<p>An agent calls:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>send_payment(request_id=R9)</span></span></code></pre>
+<p>The payment service commits successfully, but the response is delayed beyond the agent deadline.</p>
+<p>The agent retries.</p>
+<p>Nothing about “agentic AI” changes the distributed-systems question.</p>
+<p>The system still needs:</p>
+<ul>
+<li>stable request identity;</li>
+<li>authenticated authority;</li>
+<li>authorization;</li>
+<li>retry-safe semantics;</li>
+<li>auditability.</li>
+</ul>
+<p>This is exactly why the course treats agentic systems as consumers of distributed-systems engineering rather than substitutes for it.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="46-historical-perspective--stronger-failure-models-followed-deployment-needs">46. Historical perspective — stronger failure models followed deployment needs</h2><a class="sl-anchor-link" href="#46-historical-perspective--stronger-failure-models-followed-deployment-needs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “46. Historical perspective — stronger failure models followed deployment needs”</span></a></div>
+<p>Early distributed-system work often distinguished benign failures from arbitrary failures because the algorithms and required redundancy differ drastically.</p>
+<p>Byzantine-failure research asked what could be guaranteed when participants could send contradictory or arbitrary information.</p>
+<p>PBFT later demonstrated a practical state-machine replication design for Byzantine settings under realistic cryptographic/network assumptions of its era.</p>
+<p>Modern blockchains, permissioned ledgers, cross-organization systems, and agent/tool ecosystems continue revisiting the same fundamental questions:</p>
+<blockquote>
+<p>Who is trusted, who participates, what can fail maliciously, and what evidence makes a decision authoritative?</p>
+</blockquote>
+<p>The technology changes. The questions persist.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="47-common-mistakes">47. Common mistakes</h2><a class="sl-anchor-link" href="#47-common-mistakes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “47. Common mistakes”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-1--tls-means-the-service-is-secure">Mistake 1 — “TLS means the service is secure”</h3><a class="sl-anchor-link" href="#mistake-1--tls-means-the-service-is-secure"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 1 — “TLS means the service is secure””</span></a></div>
+<p>TLS protects a channel. Authorization, validation, storage security, and compromised endpoints remain separate concerns.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-2--use-ip-address-as-identity">Mistake 2 — use IP address as identity</h3><a class="sl-anchor-link" href="#mistake-2--use-ip-address-as-identity"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 2 — use IP address as identity”</span></a></div>
+<p>Addresses locate endpoints. They are not generally sufficient authentication claims.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-3--authenticate-but-never-authorize">Mistake 3 — authenticate but never authorize</h3><a class="sl-anchor-link" href="#mistake-3--authenticate-but-never-authorize"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 3 — authenticate but never authorize”</span></a></div>
+<p>Knowing who the caller is does not determine what the caller may do.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-4--log-secrets-for-debugging">Mistake 4 — log secrets for debugging</h3><a class="sl-anchor-link" href="#mistake-4--log-secrets-for-debugging"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 4 — log secrets for debugging”</span></a></div>
+<p>Observability data often has broad access and long retention. Sensitive values should not be copied casually into it.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-5--treat-raft-as-byzantine-tolerant">Mistake 5 — treat Raft as Byzantine tolerant</h3><a class="sl-anchor-link" href="#mistake-5--treat-raft-as-byzantine-tolerant"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 5 — treat Raft as Byzantine tolerant”</span></a></div>
+<p>Raft is designed around benign/crash-style replica failure assumptions, not arbitrary malicious replicas.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-6--add-signatures-and-claim-consensus">Mistake 6 — add signatures and claim consensus</h3><a class="sl-anchor-link" href="#mistake-6--add-signatures-and-claim-consensus"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 6 — add signatures and claim consensus”</span></a></div>
+<p>Authentication evidence does not create agreement by itself.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-7--use-blockchain-because-multiple-nodes-exist">Mistake 7 — use blockchain because multiple nodes exist</h3><a class="sl-anchor-link" href="#mistake-7--use-blockchain-because-multiple-nodes-exist"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 7 — use blockchain because multiple nodes exist”</span></a></div>
+<p>Deployment and adversary assumptions should select the mechanism.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-8--trust-an-internal-service-automatically">Mistake 8 — trust an internal service automatically</h3><a class="sl-anchor-link" href="#mistake-8--trust-an-internal-service-automatically"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 8 — trust an internal service automatically”</span></a></div>
+<p>Compromise often crosses “internal” boundaries. Authenticate and authorize according to actual risk.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-9--grant-an-ai-agent-broad-tool-authority-because-its-prompt-says-not-to-misuse-it">Mistake 9 — grant an AI agent broad tool authority because its prompt says not to misuse it</h3><a class="sl-anchor-link" href="#mistake-9--grant-an-ai-agent-broad-tool-authority-because-its-prompt-says-not-to-misuse-it"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 9 — grant an AI agent broad tool authority because its prompt says not to misuse it”</span></a></div>
+<p>Policy must be enforced outside the model at the tool/service boundary.</p>
+<div class="sl-heading-wrapper level-h3"><h3 id="mistake-10--conflate-convergence-with-integrity">Mistake 10 — conflate convergence with integrity</h3><a class="sl-anchor-link" href="#mistake-10--conflate-convergence-with-integrity"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Mistake 10 — conflate convergence with integrity”</span></a></div>
+<p>Replicas can converge to the same maliciously injected value. Consistency does not imply authorization or correctness of input.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="50-laboratory-transition">50. Laboratory transition</h2><a class="sl-anchor-link" href="#50-laboratory-transition"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “50. Laboratory transition”</span></a></div>
+<p>The lab takes a system built earlier in the course and performs three transformations:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>implicit trust</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>explicit threat model</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>authenticated service/client boundary</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>malicious-node thought experiment</span></span></code></pre>
+<p>You must not merely “turn on TLS.” They must identify exactly which threat TLS addresses, add an authorization or message-validation boundary, test at least one unauthorized/replayed request, and explain which earlier correctness guarantee breaks if one trusted replica becomes Byzantine.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="chapter-summary">Chapter summary</h2><a class="sl-anchor-link" href="#chapter-summary"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Chapter summary”</span></a></div>
+<p>Security changes distributed-systems reasoning by changing assumptions about <strong>who may participate and how they may behave</strong>.</p>
+<p>Remember the layer boundaries:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>address</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>identity</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>identity</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>authority</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>TLS</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>authorization</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>signatures</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>consensus</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>crash tolerance</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>Byzantine tolerance</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>agent instruction</span></span>
+<span class="line"><span> !=</span></span>
+<span class="line"><span>security policy</span></span></code></pre>
+<p>A strong design states its threat model, protects trust boundaries with appropriate mechanisms, minimizes authority, validates external messages, and uses a distributed protocol whose failure model matches the deployment.</p>
+<p>The final-project question is therefore not merely:</p>
+<blockquote>
+<p>Does the system survive node failure?</p>
+</blockquote>
+<p>It is also:</p>
+<blockquote>
+<p><strong>Which nodes are trusted, what may an untrusted participant do, and which guarantees remain valid if those assumptions are violated?</strong></p>
+</blockquote>
+<div class="ds-next-action">
+  <span>Core reading complete</span>
+  <strong>Next required step · Guided practice</strong>
+  <a href="../guided-practice/">Start guided practice →</a>
+</div>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div></body></html>

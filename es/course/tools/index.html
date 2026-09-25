@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="es" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-g5ptsecz"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Herramientas y entorno sin conexión | Sistemas Distribuidos 2026</title><link rel="canonical" href="https://matcom.github.io/distributed-systems-2026/es/course/tools/"/><link rel="alternate" hreflang="en" href="https://matcom.github.io/distributed-systems-2026/course/tools/"/><link rel="alternate" hreflang="es" href="https://matcom.github.io/distributed-systems-2026/es/course/tools/"/><link rel="alternate" hreflang="x-default" href="https://matcom.github.io/distributed-systems-2026/course/tools/"/><link rel="sitemap" href="/distributed-systems-2026/sitemap-index.xml"/><link rel="shortcut icon" href="/distributed-systems-2026/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.3.2"/><meta name="generator" content="Starlight v0.42.0"/><meta property="og:title" content="Herramientas y entorno sin conexión"/><meta property="og:type" content="article"/><meta property="og:url" content="https://matcom.github.io/distributed-systems-2026/es/course/tools/"/><meta property="og:locale" content="es"/><meta property="og:description" content="Distributed systems, failures, coordination, replication, recovery, and trust for the CC degree."/><meta property="og:site_name" content="Sistemas Distribuidos 2026"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Distributed systems, failures, coordination, replication, recovery, and trust for the CC degree."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/distributed-systems-2026/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/distributed-systems-2026/_astro/index.BEMFnyg8.css"><script type="module" src="/distributed-systems-2026/_astro/page.Dwipeu-R.js"></script></head><body class="astro-g5ptsecz"><a class="sl-skip-link astro-qb7clj6f" href="#_top">Ir al contenido</a><div class="page sl-flex astro-yntsjkba"><header class="header astro-yntsjkba"><div class="header astro-by6fddyj"><div class="title-wrapper sl-flex astro-by6fddyj"><a class="uh-brand astro-sihtrrup" href="/distributed-systems-2026/es" aria-label="Inicio de Sistemas Distribuidos 2026"><img src="/distributed-systems-2026/assets/uh-logo.jpg" alt="" width="128" height="171" decoding="async" class="astro-sihtrrup"><span class="uh-brand-copy astro-sihtrrup"><strong class="astro-sihtrrup">Universidad de La Habana</strong><span class="uh-brand-context uh-brand-context-full astro-sihtrrup">Facultad de Matemática y Computación · Sistemas Distribuidos 2026</span><span class="uh-brand-context uh-brand-context-compact astro-sihtrrup">MatCom · Sistemas Distribuidos 2026</span></span></a></div><div class="sl-flex print:hidden astro-by6fddyj"><site-search class="astro-by6fddyj astro-b5kgnn7o" data-translations="{&quot;placeholder&quot;:&quot;Buscar&quot;,&quot;clear_search&quot;:&quot;Limpiar&quot;,&quot;load_more&quot;:&quot;Cargar más resultados&quot;,&quot;search_label&quot;:&quot;Buscar página&quot;,&quot;filters_label&quot;:&quot;Filtros&quot;,&quot;zero_results&quot;:&quot;Ningún resultado para: [SEARCH_TERM]&quot;,&quot;many_results&quot;:&quot;[COUNT] resultados para: [SEARCH_TERM]&quot;,&quot;one_result&quot;:&quot;[COUNT] resultado para: [SEARCH_TERM]&quot;,&quot;alt_search&quot;:&quot;Ningún resultado para [SEARCH_TERM]. Mostrando resultados para: [DIFFERENT_TERM]&quot;,&quot;search_suggestion&quot;:&quot;Ningún resultado para [SEARCH_TERM]. Prueba alguna de estas búsquedas:&quot;,&quot;searching&quot;:&quot;Buscando [SEARCH_TERM]...&quot;}"><button data-open-modal disabled aria-label="Buscar" aria-keyshortcuts="Control+K" class="astro-b5kgnn7o"><svg aria-hidden="true" class="astro-b5kgnn7o astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-b5kgnn7o" aria-hidden="true">Buscar</span><kbd class="sl-hidden md:sl-flex astro-b5kgnn7o" style="display: none;"><kbd class="astro-b5kgnn7o">Ctrl</kbd><kbd class="astro-b5kgnn7o">K</kbd></kbd></button><dialog style="padding:0" aria-label="Buscar" class="astro-b5kgnn7o"><div class="dialog-frame sl-flex astro-b5kgnn7o"><button data-close-modal class="sl-flex md:sl-hidden astro-b5kgnn7o">Cancelar</button><div class="search-container astro-b5kgnn7o"><div id="starlight__search" class="astro-b5kgnn7o"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/distributed-systems-2026/_astro/Search.astro_astro_type_script_index_0_lang.Coa9acBV.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-by6fddyj"><div class="sl-flex social-icons astro-by6fddyj"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Seleccionar tema</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Oscuro</option><option value="light" class="astro-2z5xp7gb">Claro</option><option value="auto" selected class="astro-2z5xp7gb">Automático</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Seleccionar idioma</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/course/tools/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/course/tools/" selected class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><nav class="sidebar print:hidden astro-yntsjkba" aria-label="Primario"><button popovertarget="starlight__sidebar" class="sl-menu-button sl-flex md:sl-hidden print:hidden astro-r2osgdlg"><svg aria-hidden="true" class="open-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg><svg aria-hidden="true" class="close-menu astro-r2osgdlg astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg><span class="sr-only astro-r2osgdlg">Menú</span></button><script type="module">var e=class extends HTMLElement{constructor(){super(),matchMedia(`(min-width: 50em)`).addEventListener(`change`,()=>this.hidePopover()),this.addEventListener(`toggle`,({newState:e})=>this.trapFocus(e===`open`))}trapFocus(e){document.querySelectorAll(`.main-frame, .sl-skip-link`).forEach(t=>{t.toggleAttribute(`inert`,e)})}};customElements.define(`sl-sidebar-pane`,e);</script><sl-sidebar-pane popover id="starlight__sidebar" class="sidebar-pane astro-yntsjkba"><div class="sidebar-content sl-flex astro-yntsjkba"><sl-sidebar-state-persist data-hash="1dg98sd" class="astro-ipdry5cl"><script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script><ul class="top-level astro-rmhv4bp6"><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Curso</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="0"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/modules/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Contenido</span></a></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Calentamiento</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="1"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m00-tooling/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Calentamiento · Taller de laboratorio</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Parte I — Fundamentos y arquitectura</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="2"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m01-distributed-systems/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 1 · Pensar en sistemas distribuidos</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m02-ray-middleware/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 2 · Arquitecturas y middleware</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m05-processes-concurrency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 3 · Procesos, virtualización y ejecución distribuida</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Parte II — Comunicación y coordinación</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="3"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m03-rpc/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 4 · Comunicación I — RPC y fallos remotos</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m12-dht-gossip/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 5 · Comunicación II — Mensajería y diseminación</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m06-time-causality/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 6 · Coordinación I — Tiempo y causalidad</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m09-consensus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 7 · Coordinación II — Elecciones y acuerdo</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Parte III — Nombres y estado replicado</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="4"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m04-architecture-discovery/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 8 · Nombres, descubrimiento y búsqueda descentralizada</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m08-replication-consistency/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 9 · Replicación y consistencia</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Parte IV — Tolerancia a fallos</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="5"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m07-failures/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 10 · Modelos de fallo, resiliencia y recuperación</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m11-transactions-sharding/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 11 · Transacciones, recuperación y estado distribuido</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Parte V — Seguridad y operación</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="6"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/generated/m15-security-byzantine/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Capítulo 12 · Seguridad, confianza y operación de sistemas distribuidos</span></a></li></ul></details></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Explorar</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="7"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/history/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Historia de los sistemas distribuidos</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/curiosity/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Curiosidades</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Proyecto final</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="8"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/projects/methodology/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Metodología</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/projects/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">20 temas de proyecto</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/projects/trademarks/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Referencias de terceros</span></a></li></ul></details></li><li class="astro-rmhv4bp6"><details open class="astro-rmhv4bp6"><summary class="astro-rmhv4bp6"><span class="group-label astro-rmhv4bp6"><span class="large astro-rmhv4bp6">Curso y práctica</span></span><svg aria-hidden="true" class="caret astro-rmhv4bp6 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></summary><sl-sidebar-restore data-index="9"></sl-sidebar-restore><ul class="astro-rmhv4bp6"><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/course/schedule/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Cronograma</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/course/syllabus/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Información del curso</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/course/tools/" aria-current="page" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Herramientas y entorno sin conexión</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/labs/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Índice de laboratorios</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/labs/scenarios/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Escenarios de fallo y carga</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/toolbox/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Caja de herramientas</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/references/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Biblioteca de referencias</span></a></li><li class="astro-rmhv4bp6"><a href="/distributed-systems-2026/es/resources/" class="astro-rmhv4bp6"><span class="astro-rmhv4bp6">Recursos de práctica</span></a></li></ul></details></li></ul><script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script></sl-sidebar-state-persist><div class="md:sl-hidden"><div class="mobile-preferences sl-flex astro-p4azlveh"><div class="social-icons astro-p4azlveh"></div><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Seleccionar tema</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="dark" class="astro-2z5xp7gb">Oscuro</option><option value="light" class="astro-2z5xp7gb">Claro</option><option value="auto" selected class="astro-2z5xp7gb">Automático</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><starlight-lang-select><label style="--sl-select-width: 7em" class="astro-2z5xp7gb"><span class="sr-only astro-2z5xp7gb">Seleccionar idioma</span><svg aria-hidden="true" class="icon label-icon astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path fill-rule="evenodd" d="M8.516 3a.94.94 0 0 0-.941.94v1.15H2.94a.94.94 0 1 0 0 1.882h7.362a7.422 7.422 0 0 1-1.787 3.958 7.42 7.42 0 0 1-1.422-2.425.94.94 0 1 0-1.774.627 9.303 9.303 0 0 0 1.785 3.043 7.422 7.422 0 0 1-4.164 1.278.94.94 0 1 0 0 1.881 9.303 9.303 0 0 0 5.575-1.855 9.303 9.303 0 0 0 4.11 1.74l-.763 1.525a.968.968 0 0 0-.016.034l-1.385 2.77a.94.94 0 1 0 1.683.841l1.133-2.267h5.806l1.134 2.267a.94.94 0 0 0 1.683-.841l-1.385-2.769a.95.95 0 0 0-.018-.036l-3.476-6.951a.94.94 0 0 0-1.682 0l-1.82 3.639a7.423 7.423 0 0 1-3.593-1.256 9.303 9.303 0 0 0 2.27-5.203h1.894a.94.94 0 0 0 0-1.881H9.456V3.94A.94.94 0 0 0 8.516 3Zm6.426 11.794a1.068 1.068 0 0 1-.02.039l-.703 1.407h3.924l-1.962-3.924-1.24 2.478Z" clip-rule="evenodd"/></svg><select autocomplete="off" class="astro-2z5xp7gb"><option value="/distributed-systems-2026/course/tools/" class="astro-2z5xp7gb">English</option><option value="/distributed-systems-2026/es/course/tools/" selected class="astro-2z5xp7gb">Español</option></select><svg aria-hidden="true" class="icon caret astro-2z5xp7gb astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-lang-select></div></div></div></sl-sidebar-pane></nav><div class="main-frame astro-yntsjkba"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-lrzkfocr"><aside class="right-sidebar-container print:hidden astro-lrzkfocr"><div class="right-sidebar astro-lrzkfocr"><div class="lg:sl-hidden astro-qok35upx"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-66cqc7ze"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-66cqc7ze"><details id="starlight__mobile-toc" class="astro-66cqc7ze"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-66cqc7ze"><span class="toggle sl-flex astro-66cqc7ze">En esta página<svg aria-hidden="true" class="caret astro-66cqc7ze astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-66cqc7ze"></span></summary><div class="dropdown astro-66cqc7ze"><ul class="isMobile astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Sinopsis</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#entorno-base" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Entorno base</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-específicas-de-capítulos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas específicas de capítulos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#inspección-y-evidencia-de-paquetes" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Inspección y evidencia de paquetes</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#aislamiento-e-inyección-de-fallos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Aislamiento e inyección de fallos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#corrección-concurrencia-y-rendimiento" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Corrección, concurrencia y rendimiento</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-de-observabilidad" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas de observabilidad</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-que-no-son-prerrequisitos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas que no son prerrequisitos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#antes-de-desconectarte" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Antes de desconectarte</span></a></li></ul></div></details></nav></mobile-starlight-toc><script type="module" src="/distributed-systems-2026/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.BcSo_yiZ.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-qok35upx"><div class="sl-container astro-qok35upx"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">En esta página</h2><ul class="astro-jugkfwgx" style="--depth: 0;"><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#_top" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Sinopsis</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#entorno-base" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Entorno base</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-específicas-de-capítulos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas específicas de capítulos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#inspección-y-evidencia-de-paquetes" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Inspección y evidencia de paquetes</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#aislamiento-e-inyección-de-fallos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Aislamiento e inyección de fallos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#corrección-concurrencia-y-rendimiento" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Corrección, concurrencia y rendimiento</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-de-observabilidad" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas de observabilidad</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#herramientas-que-no-son-prerrequisitos" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Herramientas que no son prerrequisitos</span></a></li><li style="--depth: 0;" class="astro-jugkfwgx"><a href="#antes-de-desconectarte" style="--depth: 0;" class="astro-jugkfwgx"><span style="--depth: 0;" class="astro-jugkfwgx">Antes de desconectarte</span></a></li></ul></nav></starlight-toc><script type="module" src="/distributed-systems-2026/_astro/TableOfContents.astro_astro_type_script_index_0_lang.Csloo1VZ.js"></script></div></div></div></aside><div class="main-pane astro-lrzkfocr"><main data-pagefind-body class="astro-g5ptsecz" lang="es" dir="ltr"><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><h1 id="_top" class="astro-bebwqqxs">Herramientas y entorno sin conexión</h1></div></div><div class="content-panel astro-a7po4psb"><div class="sl-container astro-a7po4psb"><div class="sl-markdown-content"><p>El contenido del curso es local-first, pero un ZIP de capítulo no puede contener todo el toolchain de un sistema operativo. Usa esta página como <strong>contrato de entorno</strong>: instala las herramientas que esperas utilizar antes de un período largo sin conexión y después descarga el paquete del capítulo correspondiente.</p>
+<p>No necesitas todas las herramientas en todos los capítulos. La ruta obligatoria prefiere la herramienta más pequeña que haga visible el mecanismo y la evidencia.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="entorno-base">Entorno base</h2><a class="sl-anchor-link" href="#entorno-base"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Entorno base»</span></a></div>
+<p>Ten disponibles estas herramientas desde el comienzo del curso.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Para qué se usa</th>
+<th>Preparación sin conexión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Entorno capaz de ejecutar Linux</strong></td>
+<td>procesos, archivos, señales, sockets, red local, namespaces y experimentos de fallo</td>
+<td>Ten una instalación Linux, VM o entorno equivalente funcionando antes de desconectarte.</td>
+</tr>
+<tr>
+<td><strong>Shell + herramientas estándar de procesos</strong></td>
+<td>iniciar/detener servicios, inspeccionar archivos/procesos y automatizar experimentos reproducibles</td>
+<td>Comprueba que los comandos normales de shell y control de procesos funcionan localmente.</td>
+</tr>
+<tr>
+<td><strong>Git</strong></td>
+<td>historial reproducible del código y procedencia de los experimentos</td>
+<td>Clona/descarga los repositorios necesarios antes de desconectarte.</td>
+</tr>
+<tr>
+<td><strong>Python 3</strong></td>
+<td>herramientas del curso, laboratorios introductorios y scripts pequeños de análisis/apoyo</td>
+<td>Instala Python con <code dir="auto">venv</code> y <code dir="auto">pip</code>; conserva el repositorio del curso localmente.</td>
+</tr>
+<tr>
+<td><strong>Toolchain de Go</strong></td>
+<td>servicios nativos, concurrencia, red, pruebas, race detector y profiling</td>
+<td>Instala Go y verifica <code dir="auto">go version</code> antes de los capítulos con servicios nativos.</td>
+</tr>
+<tr>
+<td><strong>make</strong></td>
+<td>comandos locales consistentes de laboratorio/pruebas cuando una tarea exporta un Makefile</td>
+<td>Instálalo o usa el comando subyacente documentado cuando no esté disponible.</td>
+</tr>
+<tr>
+<td><strong>curl</strong></td>
+<td>sonda independiente HTTP/de aplicación</td>
+<td>Instálalo localmente; al probar servicios locales no necesita Internet.</td>
+</tr>
+<tr>
+<td><strong>Herramientas iproute2</strong> (<code dir="auto">ss</code>, <code dir="auto">ip</code>, <code dir="auto">tc</code>)</td>
+<td>inspección de sockets, namespaces, configuración de red local y fallos con <code dir="auto">tc netem</code></td>
+<td>Instala el paquete del sistema operativo que contiene estos comandos. Algunos experimentos con <code dir="auto">tc</code>/namespaces requieren privilegios administrativos locales.</td>
+</tr>
+</tbody>
+</table>
+<p>El Calentamiento comprueba deliberadamente este entorno antes de que los capítulos posteriores dependan de él.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="herramientas-específicas-de-capítulos">Herramientas específicas de capítulos</h2><a class="sl-anchor-link" href="#herramientas-específicas-de-capítulos"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Herramientas específicas de capítulos»</span></a></div>
+<p>Instálalas antes del capítulo o fase de proyecto que las utiliza.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Uso principal</th>
+<th>Estado en el curso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ray Core 2.58.0</strong></td>
+<td>experimento de middleware del Capítulo 2 y Fase 1 del proyecto</td>
+<td>Obligatorio solo para la fase con Ray. Después se elimina del runtime nativo.</td>
+</tr>
+<tr>
+<td><strong>Bibliotecas gRPC</strong></td>
+<td>implementación explícita de RPC</td>
+<td>Ruta nativa recomendada en el capítulo de RPC.</td>
+</tr>
+<tr>
+<td><strong>Protocol Buffers + <code dir="auto">protoc</code></strong></td>
+<td>mensajes RPC tipados/versionados y bindings generados</td>
+<td>Se usa con la ruta gRPC.</td>
+</tr>
+<tr>
+<td><strong>grpcurl</strong></td>
+<td>inspección independiente de un servicio gRPC local</td>
+<td>Herramienta de diagnóstico recomendada para el capítulo de RPC.</td>
+</tr>
+<tr>
+<td><strong>netcat / <code dir="auto">nc</code></strong></td>
+<td>experimentos sencillos con endpoints locales y streams de bytes</td>
+<td>Herramienta útil de inspección; no sustituye la evidencia de aplicación.</td>
+</tr>
+<tr>
+<td><strong>OpenSSL</strong></td>
+<td>inspección de certificados/claves y pequeños experimentos TLS locales</td>
+<td>Se usa en el capítulo de seguridad/confianza; no hace falta una CA pública.</td>
+</tr>
+</tbody>
+</table>
+<p>Para Ray, el capítulo fija su dependencia en <code dir="auto">modules/M02-ray-middleware/lab/starter/requirements.txt</code>. Si esperas estar sin conexión durante ese capítulo, descarga los paquetes Python mientras tengas conectividad:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash" dir="ltr"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> pip</span><span style="color:#9ECBFF"> download</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> modules/M02-ray-middleware/lab/starter/requirements.txt</span><span style="color:#79B8FF"> -d</span><span style="color:#9ECBFF"> offline-wheels</span></span></code></pre>
+<p>Después, desde el directorio que contiene esos wheels:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash" dir="ltr"><code><span class="line"><span style="color:#B392F0">python3</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> pip</span><span style="color:#9ECBFF"> install</span><span style="color:#79B8FF"> --no-index</span><span style="color:#79B8FF"> --find-links</span><span style="color:#9ECBFF"> offline-wheels</span><span style="color:#79B8FF"> -r</span><span style="color:#9ECBFF"> modules/M02-ray-middleware/lab/starter/requirements.txt</span></span></code></pre>
+<p>Haz una preparación equivalente para cualquier dependencia Python adicional que el profesor asigne explícitamente.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="inspección-y-evidencia-de-paquetes">Inspección y evidencia de paquetes</h2><a class="sl-anchor-link" href="#inspección-y-evidencia-de-paquetes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Inspección y evidencia de paquetes»</span></a></div>
+<p>Estas herramientas ayudan a responder preguntas concretas. No recopiles salida solo porque la herramienta esté disponible.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code dir="auto">ss</code></strong></td>
+<td>sockets en escucha/conectados y estado de endpoints</td>
+</tr>
+<tr>
+<td><strong><code dir="auto">tcpdump</code></strong></td>
+<td>evidencia de paquetes en una interfaz/namespace seleccionado</td>
+</tr>
+<tr>
+<td><strong>Wireshark</strong></td>
+<td>inspección interactiva de paquetes cuando una GUI resulta útil</td>
+</tr>
+<tr>
+<td><strong><code dir="auto">curl</code> / <code dir="auto">grpcurl</code> / <code dir="auto">nc</code></strong></td>
+<td>sondas independientes en diferentes capas de protocolo</td>
+</tr>
+</tbody>
+</table>
+<p>La captura de paquetes normalmente es opcional. Los logs de aplicación y el estado explícito suelen ser mejor evidencia para efectos de aplicación.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="aislamiento-e-inyección-de-fallos">Aislamiento e inyección de fallos</h2><a class="sl-anchor-link" href="#aislamiento-e-inyección-de-fallos"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Aislamiento e inyección de fallos»</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Herramienta/mecanismo</th>
+<th>Uso</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kill/restart de procesos</td>
+<td>experimentos de crash y crash-recovery</td>
+<td>Técnica esencial</td>
+</tr>
+<tr>
+<td>delay/punto de fallo configurable en la aplicación</td>
+<td>inyección determinista y reversible</td>
+<td>Preferido cuando responde la pregunta</td>
+</tr>
+<tr>
+<td><strong><code dir="auto">tc netem</code></strong></td>
+<td>delay, pérdida, duplicación y reordenamiento de red</td>
+<td>Úsalo solo sobre una interfaz/namespace desechable que sepas restaurar</td>
+</tr>
+<tr>
+<td>namespaces de red/proceso de Linux</td>
+<td>aislamiento local y experimentos de partición</td>
+<td>Úsalos cuando se necesite una frontera más fuerte que procesos ordinarios</td>
+</tr>
+<tr>
+<td><strong>Docker o Podman</strong></td>
+<td>fronteras reproducibles de procesos/contenedores</td>
+<td>Opcional; se prefieren fallbacks con procesos locales cuando sean suficientes</td>
+</tr>
+</tbody>
+</table>
+<p>No conviertas Docker/Podman en un prerrequisito oculto para un laboratorio cuyo objetivo pueda demostrarse con procesos locales ordinarios.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="corrección-concurrencia-y-rendimiento">Corrección, concurrencia y rendimiento</h2><a class="sl-anchor-link" href="#corrección-concurrencia-y-rendimiento"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Corrección, concurrencia y rendimiento»</span></a></div>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code dir="auto">go test</code></strong></td>
+<td>comprobaciones deterministas en Go</td>
+</tr>
+<tr>
+<td><strong><code dir="auto">go test -race</code></strong></td>
+<td>evidencia de accesos inseguros a memoria compartida en las ejecuciones probadas</td>
+</tr>
+<tr>
+<td><strong>Go <code dir="auto">pprof</code> / perfiles del runtime</strong></td>
+<td>evidencia de CPU, memoria, goroutines y bloqueos</td>
+</tr>
+<tr>
+<td>logs estructurados</td>
+<td>IDs de solicitud/nodo, transiciones de estado, retries e historias de recuperación</td>
+</tr>
+<tr>
+<td>pequeño generador de carga local</td>
+<td>experimentos reproducibles de latencia/throughput/backpressure</td>
+</tr>
+</tbody>
+</table>
+<p>Una ejecución limpia de tests o del race detector solo establece lo que ejercitó. Las garantías distribuidas siguen necesitando invariantes explícitos, historias, escenarios de fallo y evidencia de recuperación.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="herramientas-de-observabilidad">Herramientas de observabilidad</h2><a class="sl-anchor-link" href="#herramientas-de-observabilidad"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Herramientas de observabilidad»</span></a></div>
+<p>El curso enseña observabilidad sin exigir una plataforma hospedada.</p>
+<ul>
+<li><strong>OpenTelemetry</strong> puede usarse para instrumentación de trazas/métricas y propagación de contexto.</li>
+<li><strong>Métricas estilo Prometheus</strong> o un endpoint local ligero pueden usarse para tasas, colas, errores y uso de recursos.</li>
+<li>Un backend dedicado de trazas es opcional; trazas/logs locales compactos son suficientes para la ruta obligatoria.</li>
+</ul>
+<p>No se requiere ningún servicio de monitorización de pago.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="herramientas-que-no-son-prerrequisitos">Herramientas que no son prerrequisitos</h2><a class="sl-anchor-link" href="#herramientas-que-no-son-prerrequisitos"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Herramientas que no son prerrequisitos»</span></a></div>
+<p>La ruta obligatoria no depende de:</p>
+<ul>
+<li>infraestructura cloud de pago;</li>
+<li>productos SaaS de pago;</li>
+<li>APIs de IA de pago;</li>
+<li>Kubernetes;</li>
+<li>una cuenta en una autoridad certificadora pública;</li>
+<li>un backend de observabilidad hospedado;</li>
+<li>conexión permanente a Internet durante los laboratorios.</li>
+</ul>
+<p>Los proyectos pueden justificar bibliotecas o infraestructura adicionales, pero no deben ocultar el mecanismo distribuido que se evalúa.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="antes-de-desconectarte">Antes de desconectarte</h2><a class="sl-anchor-link" href="#antes-de-desconectarte"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Sección titulada «Antes de desconectarte»</span></a></div>
+<p>Para los capítulos que planeas estudiar sin conexión:</p>
+<ol>
+<li>descarga el ZIP del capítulo;</li>
+<li>clona o actualiza tu repositorio de trabajo;</li>
+<li>instala el toolchain base;</li>
+<li>instala o descarga previamente las dependencias específicas del capítulo;</li>
+<li>ejecuta una vez los checks de setup/versión del capítulo;</li>
+<li>comprueba que las pruebas transparentes pueden iniciar localmente;</li>
+<li>conserva en la máquina cualquier caché de lenguajes/módulos/paquetes necesaria.</li>
+</ol>
+<p>Después de eso, la lectura obligatoria, el starter code, las pruebas públicas, los logs, las historias y los experimentos locales normales no deberían requerir Internet.</p>
+<p>El <strong>contrato sin conexión tiene por tanto dos partes</strong>:</p>
+<ul>
+<li>el curso entrega en el paquete offline el material de aprendizaje, starter code, reportes y pruebas públicas;</li>
+<li>tú preparas en la máquina los compiladores, runtimes, paquetes de terceros y herramientas del sistema antes de desconectarte.</li>
+</ul>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"><a href="/distributed-systems-2026/es/course/syllabus/" rel="prev" class="astro-b5raizh3"><svg aria-hidden="true" class="astro-b5raizh3 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-b5raizh3">Página anterior<br class="astro-b5raizh3"><span class="link-title astro-b5raizh3">Información del curso</span></span></a><a href="/distributed-systems-2026/es/labs/" rel="next" class="astro-b5raizh3"><svg aria-hidden="true" class="astro-b5raizh3 astro-hkc32dio" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-b5raizh3">Siguiente página<br class="astro-b5raizh3"><span class="link-title astro-b5raizh3">Índice de laboratorios</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>
