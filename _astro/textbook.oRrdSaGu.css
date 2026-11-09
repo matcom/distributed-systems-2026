@@ -77,9 +77,9 @@ html.tb .tb-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1re
 html.tb .tb-toolbar label{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer}
 html.tb .tb-count{margin-inline-start:auto;color:var(--ds-muted)}
 html.tb .tb-count b{color:var(--ds-navy)}
-html.tb ol.tb-quiz{list-style:none;padding:0;margin:0;counter-reset:q}
-html.tb ol.tb-quiz>li.tb-q{counter-increment:q;position:relative;margin:.6rem 0;padding:.85rem 1rem .85rem 3rem;border:1px solid var(--ds-rule);border-radius:.5rem;background:var(--tb-card)}
-html.tb ol.tb-quiz>li.tb-q::before{content:counter(q);position:absolute;left:1rem;top:.85rem;font-family:var(--sl-font);font-weight:700;color:var(--ds-muted)}
+html.tb ol.tb-quiz{list-style:none;padding:0;margin:0}
+html.tb ol.tb-quiz>li.tb-q{position:relative;margin:.6rem 0;padding:.85rem 1rem .85rem 3rem;border:1px solid var(--ds-rule);border-radius:.5rem;background:var(--tb-card)}
+html.tb ol.tb-quiz>li.tb-q::before{content:attr(value);position:absolute;left:1rem;top:.85rem;font-family:var(--sl-font);font-weight:700;color:var(--ds-muted)}
 html.tb li.tb-q.tb-core{border-inline-start:3px solid var(--ds-blue)}
 html.tb .tb-badge{display:inline-block;margin-inline-start:.4rem;padding:.05rem .4rem;border-radius:.25rem;background:var(--ds-blue);color:#fff;font-family:var(--sl-font);font-size:.68rem;font-weight:700;vertical-align:.1em}
 html[data-theme=dark].tb .tb-badge{color:#0d151b}
@@ -87,6 +87,8 @@ html.tb .tb-badge.bank{background:none;color:var(--ds-muted);border:1px solid va
 html.tb li.tb-q details{margin-top:.35rem}
 html.tb li.tb-q summary,html.tb .tb-reveal>summary{cursor:pointer;color:var(--ds-blue);font-family:var(--sl-font);font-size:.85rem;font-weight:650}
 html.tb li.tb-q.tb-answered summary::after{content:"  ✓ answered";color:var(--tb-ok)}
+html.tb:lang(es) li.tb-q.tb-answered summary::after{content:"  ✓ respondida"}
+html.tb .tb-checklist li.ext a{color:var(--ds-muted)}
 html.tb .tb-quizwrap:has(#tb-core-only:checked) li.tb-q:not(.tb-core){display:none}
 html.tb .tb-reveal{border:1px dashed var(--ds-rule);border-radius:.5rem;padding:.8rem 1rem;margin:1rem 0}
 html.tb .tb-reveal[open]{border-style:solid;background:var(--tb-soft)}
@@ -129,6 +131,7 @@ html.tb .ds-next-action span{text-transform:none;letter-spacing:0;font-family:va
   html.tb .tb-figure .tb-scroll{overflow-x:auto;margin-inline:-.75rem;padding-inline:.75rem}
   html.tb .tb-figure .tb-scroll svg{min-width:620px}
   html.tb .tb-figure .tb-scroll::after{content:"Scroll sideways to see the whole diagram →";display:block;margin-top:.3rem;color:var(--ds-muted);font-size:.78rem;position:sticky;left:0}
+  html.tb:lang(es) .tb-figure .tb-scroll::after{content:"Desliza para ver el diagrama completo →"}
   html.tb .sl-markdown-content{font-size:1.02rem}
   html.tb ol.tb-quiz>li.tb-q{padding-left:2.4rem}
   html.tb ol.tb-quiz>li.tb-q::before{left:.8rem}
