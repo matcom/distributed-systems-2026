@@ -1,0 +1,16 @@
+{
+  "name": "Distributed Systems 2026 · MatCom",
+  "short_name": "Distributed Systems",
+  "start_url": "/distributed-systems-2026/",
+  "scope": "/distributed-systems-2026/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#102a3a",
+  "icons": [
+    {
+      "src": "/distributed-systems-2026/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

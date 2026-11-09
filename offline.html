@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Offline | Distributed Systems 2026</title><link rel="stylesheet" href="/distributed-systems-2026/_astro/index.8BHF2SXp.css"><style>body{max-width:40rem;margin:0 auto;padding:2.5rem 1rem;font-family:var(--sl-font);line-height:1.6}h1{color:var(--ds-navy);font-size:1.6rem}li{margin:.3rem 0}a{color:var(--ds-blue)}</style></head>
+<body><h1>You are offline · Sin conexión</h1>
+<p>This page has not been saved on this device yet. These pages are available offline:<br><span lang="es">Esta página aún no se ha guardado en este dispositivo. Estas páginas están disponibles sin conexión:</span></p>
+<ul id="saved"><li>…</li></ul>
+<script>caches.open('ds-pages-v1').then(c=>c.keys()).then(ks=>{const ul=document.getElementById('saved');const pages=ks.map(r=>new URL(r.url)).filter(u=>u.pathname.endsWith('/'));ul.innerHTML='';for(const u of pages.sort((a,b)=>a.pathname.localeCompare(b.pathname))){const li=document.createElement('li'),a=document.createElement('a');a.href=u.pathname;a.textContent=decodeURIComponent(u.pathname.replace("/distributed-systems-2026/",'/'));li.append(a);ul.append(li)}if(!pages.length)ul.innerHTML='<li>—</li>'}).catch(()=>{})</script>
+</body></html>
