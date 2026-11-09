@@ -4,158 +4,158 @@
     {
       "module": "M00-tooling",
       "language": "en",
-      "file": "en/m00-tooling.zip",
-      "bytes": 66530
+      "file": "en\\m00-tooling.zip",
+      "bytes": 66536
     },
     {
       "module": "M00-tooling",
       "language": "es",
-      "file": "es/m00-tooling.zip",
-      "bytes": 66692
+      "file": "es\\m00-tooling.zip",
+      "bytes": 66694
     },
     {
       "module": "M01-distributed-systems",
       "language": "en",
-      "file": "en/m01-distributed-systems.zip",
-      "bytes": 67650
+      "file": "en\\m01-distributed-systems.zip",
+      "bytes": 67662
     },
     {
       "module": "M01-distributed-systems",
       "language": "es",
-      "file": "es/m01-distributed-systems.zip",
-      "bytes": 67003
+      "file": "es\\m01-distributed-systems.zip",
+      "bytes": 67008
     },
     {
       "module": "M02-ray-middleware",
       "language": "en",
-      "file": "en/m02-ray-middleware.zip",
-      "bytes": 76106
+      "file": "en\\m02-ray-middleware.zip",
+      "bytes": 76117
     },
     {
       "module": "M02-ray-middleware",
       "language": "es",
-      "file": "es/m02-ray-middleware.zip",
-      "bytes": 75711
+      "file": "es\\m02-ray-middleware.zip",
+      "bytes": 75718
     },
     {
       "module": "M05-processes-concurrency",
       "language": "en",
-      "file": "en/m05-processes-concurrency.zip",
-      "bytes": 65964
+      "file": "en\\m05-processes-concurrency.zip",
+      "bytes": 65972
     },
     {
       "module": "M05-processes-concurrency",
       "language": "es",
-      "file": "es/m05-processes-concurrency.zip",
-      "bytes": 65112
+      "file": "es\\m05-processes-concurrency.zip",
+      "bytes": 65118
     },
     {
       "module": "M03-rpc",
       "language": "en",
-      "file": "en/m03-rpc.zip",
-      "bytes": 72764
+      "file": "en\\m03-rpc.zip",
+      "bytes": 72769
     },
     {
       "module": "M03-rpc",
       "language": "es",
-      "file": "es/m03-rpc.zip",
-      "bytes": 75717
+      "file": "es\\m03-rpc.zip",
+      "bytes": 75721
     },
     {
       "module": "M12-dht-gossip",
       "language": "en",
-      "file": "en/m12-dht-gossip.zip",
-      "bytes": 74461
+      "file": "en\\m12-dht-gossip.zip",
+      "bytes": 74466
     },
     {
       "module": "M12-dht-gossip",
       "language": "es",
-      "file": "es/m12-dht-gossip.zip",
-      "bytes": 77617
+      "file": "es\\m12-dht-gossip.zip",
+      "bytes": 77621
     },
     {
       "module": "M06-time-causality",
       "language": "en",
-      "file": "en/m06-time-causality.zip",
-      "bytes": 64412
+      "file": "en\\m06-time-causality.zip",
+      "bytes": 64416
     },
     {
       "module": "M06-time-causality",
       "language": "es",
-      "file": "es/m06-time-causality.zip",
-      "bytes": 63450
+      "file": "es\\m06-time-causality.zip",
+      "bytes": 63455
     },
     {
       "module": "M09-consensus",
       "language": "en",
-      "file": "en/m09-consensus.zip",
-      "bytes": 82409
+      "file": "en\\m09-consensus.zip",
+      "bytes": 82414
     },
     {
       "module": "M09-consensus",
       "language": "es",
-      "file": "es/m09-consensus.zip",
-      "bytes": 87078
+      "file": "es\\m09-consensus.zip",
+      "bytes": 87081
     },
     {
       "module": "M04-architecture-discovery",
       "language": "en",
-      "file": "en/m04-architecture-discovery.zip",
-      "bytes": 74985
+      "file": "en\\m04-architecture-discovery.zip",
+      "bytes": 74990
     },
     {
       "module": "M04-architecture-discovery",
       "language": "es",
-      "file": "es/m04-architecture-discovery.zip",
-      "bytes": 77680
+      "file": "es\\m04-architecture-discovery.zip",
+      "bytes": 77687
     },
     {
       "module": "M08-replication-consistency",
       "language": "en",
-      "file": "en/m08-replication-consistency.zip",
-      "bytes": 79935
+      "file": "en\\m08-replication-consistency.zip",
+      "bytes": 79942
     },
     {
       "module": "M08-replication-consistency",
       "language": "es",
-      "file": "es/m08-replication-consistency.zip",
-      "bytes": 81792
+      "file": "es\\m08-replication-consistency.zip",
+      "bytes": 81797
     },
     {
       "module": "M07-failures",
       "language": "en",
-      "file": "en/m07-failures.zip",
-      "bytes": 76822
+      "file": "en\\m07-failures.zip",
+      "bytes": 76827
     },
     {
       "module": "M07-failures",
       "language": "es",
-      "file": "es/m07-failures.zip",
-      "bytes": 79349
+      "file": "es\\m07-failures.zip",
+      "bytes": 79353
     },
     {
       "module": "M11-transactions-sharding",
       "language": "en",
-      "file": "en/m11-transactions-sharding.zip",
-      "bytes": 75050
+      "file": "en\\m11-transactions-sharding.zip",
+      "bytes": 75054
     },
     {
       "module": "M11-transactions-sharding",
       "language": "es",
-      "file": "es/m11-transactions-sharding.zip",
-      "bytes": 75519
+      "file": "es\\m11-transactions-sharding.zip",
+      "bytes": 75521
     },
     {
       "module": "M15-security-byzantine",
       "language": "en",
-      "file": "en/m15-security-byzantine.zip",
-      "bytes": 77865
+      "file": "en\\m15-security-byzantine.zip",
+      "bytes": 77871
     },
     {
       "module": "M15-security-byzantine",
       "language": "es",
-      "file": "es/m15-security-byzantine.zip",
-      "bytes": 76014
+      "file": "es\\m15-security-byzantine.zip",
+      "bytes": 76019
     }
   ]
 }
