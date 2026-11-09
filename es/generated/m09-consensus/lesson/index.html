@@ -186,7 +186,7 @@
 <hr>
 <figure class="ds-book-figure">
   <img src="../../../../assets/book/m09-quorum-partition-es.svg" alt="Un clúster de cinco nodos dividido en una minoría de dos y una mayoría de tres." loading="lazy" decoding="async" />
-  <figcaption><span>Figura</span>Un líder puede seguir vivo en una minoría y aun así no poder confirmar entradas. La intersección de mayorías trata de evidencia autoritativa, no de quién aún se cree líder.</figcaption>
+  <figcaption><span>Figura 7.1</span>Un líder puede seguir vivo en una minoría y aun así no poder confirmar entradas. La intersección de mayorías trata de evidencia autoritativa, no de quién aún se cree líder.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="3-elegir-un-líder-no-equivale-a-resolver-consenso">3. Elegir un líder no equivale a resolver consenso</h2><a class="sl-anchor-link" href="#3-elegir-un-líder-no-equivale-a-resolver-consenso"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «3. Elegir un líder no equivale a resolver consenso»</span></a></div>
 <p>Muchos sistemas eligen un líder.</p>
@@ -287,6 +287,43 @@
 <hr>
 <div class="sl-heading-wrapper level-h2"><h2 id="10-los-election-timeouts-convierten-el-silencio-en-un-disparador-de-liveness">10. Los election timeouts convierten el silencio en un disparador de liveness</h2><a class="sl-anchor-link" href="#10-los-election-timeouts-convierten-el-silencio-en-un-disparador-de-liveness"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «10. Los election timeouts convierten el silencio en un disparador de liveness»</span></a></div>
 <p>El Capítulo 10 enseña que el silencio no puede demostrar que el líder murió.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m09-consensus-est tb-m09-consensus-esd"><title id="tb-m09-consensus-est">Una elección en Raft</title><desc id="tb-m09-consensus-esd">S2 no recibe nada antes de su election timeout, se vuelve candidato del term 2, recibe los votos de S1 y S3, se convierte en líder y envía heartbeats AppendEntries.</desc>
+<text class="ink lane" x="16" y="53">S1</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">S2</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">S3</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<rect class="band" x="137.2" y="110" width="109.80000000000001" height="16" rx="3"/>
+<text class="muted small" x="192.1" y="105" text-anchor="middle">follower, sin noticias del líder</text>
+<line class="alert-line" x1="247" y1="106" x2="247" y2="130"/>
+<text class="alert small strong" x="243" y="146" text-anchor="end">election timeout</text>
+<line class="line" x1="271.4" y1="118" x2="332.4" y2="48"/>
+<polygon class="ink" points="332.4,48.0 322.4,52.6 329.2,58.5"/>
+<text class="ink small" x="290.84999999999997" y="81.5" text-anchor="end">RequestVote(t=2)</text>
+<line class="line" x1="271.4" y1="118" x2="332.4" y2="188"/>
+<polygon class="ink" points="332.4,188.0 329.2,177.5 322.4,183.4"/>
+<line class="line" x1="356.8" y1="48" x2="417.8" y2="118"/>
+<polygon class="ink" points="417.8,118.0 414.6,107.5 407.8,113.4"/>
+<text class="ink small" x="386.15000000000003" y="67.5" text-anchor="start">voto</text>
+<line class="line" x1="362.9" y1="188" x2="417.8" y2="118"/>
+<polygon class="ink" points="417.8,118.0 408.1,123.1 415.2,128.6"/>
+<text class="ink small" x="390.115" y="158.5" text-anchor="start">voto</text>
+<circle class="accent" cx="430" cy="118" r="5"/>
+<text class="accent strong small" x="438" y="139" text-anchor="start">líder, term 2</text>
+<line class="line" x1="515.4000000000001" y1="118" x2="570.3" y2="48"/>
+<polygon class="ink" points="570.3,48.0 560.6,53.1 567.7,58.6"/>
+<text class="ink small" x="553.595" y="74.5" text-anchor="start">AppendEntries</text>
+<line class="line" x1="515.4000000000001" y1="118" x2="570.3" y2="188"/>
+<polygon class="ink" points="570.3,188.0 567.7,177.4 560.6,182.9"/>
+<line class="line" x1="637.4" y1="118" x2="692.3000000000001" y2="48"/>
+<polygon class="ink" points="692.3,48.0 682.6,53.1 689.7,58.6"/>
+<line class="line" x1="637.4" y1="118" x2="692.3000000000001" y2="188"/>
+<polygon class="ink" points="692.3,188.0 689.7,177.4 682.6,182.9"/>
+</svg></div>
+<figcaption><b>Figura 7.2</b>S2 no recibe nada antes de su election timeout aleatorio, inicia el term 2 y pide votos. Una mayoría lo convierte en líder; sus mensajes <code>AppendEntries</code> funcionan también como heartbeats que impiden que los demás inicien elecciones.</figcaption>
+</figure>
 <p>Raft no necesita una prueba perfecta.</p>
 <p>Un follower que deja de recibir durante suficiente tiempo comunicación válida del líder puede iniciar una nueva elección.</p>
 <p>Es una decisión de liveness basada en sospecha.</p>
@@ -739,4 +776,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

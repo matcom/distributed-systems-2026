@@ -147,7 +147,7 @@
 <p>Después se decide cómo sincronizar.</p>
 <figure class="ds-book-figure">
   <img src="../../../../assets/book/m05-failure-boundaries-es.svg" alt="Hilos, procesos, contenedores y hosts forman distintos límites de estado y fallo." loading="lazy" decoding="async" />
-  <figcaption><span>Figura</span>El aislamiento tiene capas. Un fallo de proceso, contenedor o host elimina conjuntos diferentes de estado y ejecución.</figcaption>
+  <figcaption><span>Figura 3.1</span>El aislamiento tiene capas. Un fallo de proceso, contenedor o host elimina conjuntos diferentes de estado y ejecución.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="4-data-race-y-carrera-lógica-no-son-lo-mismo">4. Data race y carrera lógica no son lo mismo</h2><a class="sl-anchor-link" href="#4-data-race-y-carrera-lógica-no-son-lo-mismo"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «4. Data race y carrera lógica no son lo mismo»</span></a></div>
 <p>Una <strong>data race</strong> en Go ocurre cuando accesos concurrentes conflictivos a una variable carecen de la sincronización exigida y al menos uno escribe.</p>
@@ -365,6 +365,39 @@
 <div class="sl-heading-wrapper level-h2"><h2 id="19-ejemplo-trabajado--deduplicación-concurrente">19. Ejemplo trabajado — deduplicación concurrente</h2><a class="sl-anchor-link" href="#19-ejemplo-trabajado--deduplicación-concurrente"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «19. Ejemplo trabajado — deduplicación concurrente»</span></a></div>
 <p>Del Capítulo 4:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>request_id → result</span></span></code></pre>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 254" role="img" aria-labelledby="tb-m05-processes-concurrency-est tb-m05-processes-concurrency-esd"><title id="tb-m05-processes-concurrency-est">Carrera check-then-act entre dos handlers</title><desc id="tb-m05-processes-concurrency-esd">Ambos handlers comprueban que r9 no está completada, ambos aplican el efecto y después ambos recuerdan r9: un efecto duplicado aunque cada acceso individual esté protegido.</desc>
+<text class="ink lane" x="16" y="53">Handler A</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="133">completed{}</text>
+<line class="rule" x1="115" y1="128" x2="735" y2="128"/>
+<text class="ink lane" x="16" y="213">Handler B</text>
+<line class="rule" x1="115" y1="208" x2="735" y2="208"/>
+<line class="line" x1="137.2" y1="48" x2="186" y2="128"/>
+<polygon class="ink" points="186.0,128.0 184.6,117.1 177.0,121.8"/>
+<text class="ink small" x="161.28" y="71" text-anchor="start">¿r9 hecha?</text>
+<line class="line" x1="192.1" y1="128" x2="240.9" y2="48"/>
+<polygon class="ink" points="240.9,48.0 231.9,54.2 239.5,58.9"/>
+<text class="ink small" x="224.5" y="83" text-anchor="start">no</text>
+<line class="line" x1="210.4" y1="208" x2="259.2" y2="128"/>
+<polygon class="ink" points="259.2,128.0 250.2,134.2 257.8,138.9"/>
+<text class="ink small" x="234.48" y="175" text-anchor="start">¿r9 hecha?</text>
+<line class="line" x1="265.3" y1="128" x2="314.1" y2="208"/>
+<polygon class="ink" points="314.1,208.0 312.7,197.1 305.1,201.8"/>
+<text class="ink small" x="297.70000000000005" y="163" text-anchor="start">no</text>
+<g class="crash"><circle class="alert" cx="369" cy="48" r="10"/><text x="369" y="52" text-anchor="middle">1</text></g>
+<text class="alert small strong" x="369" y="32" text-anchor="middle">apply()</text>
+<g class="crash"><circle class="alert" cx="417.8" cy="208" r="10"/><text x="417.8" y="212" text-anchor="middle">2</text></g>
+<text class="alert small strong" x="417.8" y="234" text-anchor="middle">apply() otra vez</text>
+<line class="line" x1="491" y1="48" x2="539.8" y2="128"/>
+<polygon class="ink" points="539.8,128.0 538.4,117.1 530.8,121.8"/>
+<text class="ink small" x="515.0799999999999" y="71" text-anchor="start">recordar r9</text>
+<line class="line" x1="576.4" y1="208" x2="625.2" y2="128"/>
+<polygon class="ink" points="625.2,128.0 616.2,134.2 623.8,138.9"/>
+<text class="ink small" x="600.48" y="175" text-anchor="start">recordar r9</text>
+</svg></div>
+<figcaption><b>Figura 3.2</b>Cada acceso a <code>completed</code> toma el mutex, pero comprobar y actuar son pasos separados. Ambos handlers ven "no hecha" y ambos aplican el efecto: una carrera al nivel de la operación, que un race detector no reportará.</figcaption>
+</figure>
 <p>Llegan dos reintentos de R7 casi a la vez.</p>
 <p>Código ingenuo:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>if R7 not in completed:</span></span>
@@ -540,4 +573,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

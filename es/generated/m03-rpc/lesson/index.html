@@ -370,6 +370,34 @@
 <p>El segundo caso requiere diseño a nivel de aplicación.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="9-la-idempotencia-hace-que-ejecuciones-repetidas-converjan-a-un-único-efecto">9. La idempotencia hace que ejecuciones repetidas converjan a un único efecto</h2><a class="sl-anchor-link" href="#9-la-idempotencia-hace-que-ejecuciones-repetidas-converjan-a-un-único-efecto"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «9. La idempotencia hace que ejecuciones repetidas converjan a un único efecto»</span></a></div>
 <p>Una operación es idempotente cuando aplicarla varias veces produce el mismo efecto intencionado que aplicarla una sola vez.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 204" role="img" aria-labelledby="tb-m03-rpc-est tb-m03-rpc-esd"><title id="tb-m03-rpc-est">Un reintento con identificador estable</title><desc id="tb-m03-rpc-esd">El servidor aplica r7 y guarda el resultado; la respuesta se pierde; el cliente reintenta con el mismo id; el servidor devuelve el resultado guardado sin repetir el efecto.</desc>
+<text class="ink lane" x="16" y="53">Cliente</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="163">Servidor</text>
+<line class="rule" x1="115" y1="158" x2="735" y2="158"/>
+<line class="line" x1="137.2" y1="48" x2="222.60000000000002" y2="158"/>
+<polygon class="ink" points="222.6,158.0 220.0,147.3 212.9,152.9"/>
+<text class="ink small" x="169.82" y="76" text-anchor="start">SubmitJob  req=r7</text>
+<rect class="accent" x="222.60000000000002" y="154" width="85.39999999999998" height="8" rx="2" opacity=".55"/>
+<circle class="accent" cx="308" cy="158" r="5"/>
+<text class="accent strong small" x="338" y="179" text-anchor="middle">efecto aplicado; r7 → job-15 guardado</text>
+<line class="line" x1="314.1" y1="158" x2="364.425" y2="97.5"/>
+<g class="crash"><circle class="alert" cx="364.425" cy="97.5" r="8"/><text x="364.425" y="101.5" text-anchor="middle">✕</text></g>
+<text class="ink small" x="341.23" y="128.8" text-anchor="start">respuesta</text>
+<line class="alert-line" x1="430" y1="36" x2="430" y2="60"/>
+<text class="alert small strong" x="430" y="30" text-anchor="middle">plazo vencido</text>
+<line class="line" x1="460.5" y1="48" x2="545.9" y2="158"/>
+<polygon class="ink" points="545.9,158.0 543.3,147.3 536.2,152.9"/>
+<text class="ink small" x="493.12" y="76" text-anchor="start">reintento  req=r7</text>
+<circle class="ink" cx="552" cy="158" r="4"/>
+<text class="muted small" x="582" y="179" text-anchor="middle">r7 ya visto → sin nuevo efecto</text>
+<line class="line" x1="576.4" y1="158" x2="661.8" y2="48"/>
+<polygon class="ink" points="661.8,48.0 652.1,53.1 659.2,58.7"/>
+<text class="ink small" x="630.37" y="92.5" text-anchor="start">job-15</text>
+</svg></div>
+<figcaption><b>Figura 4.1</b>Reintentar con el mismo identificador hace que el reintento converja a un único efecto: el servidor reconoce <code>r7</code> y devuelve el resultado guardado. Un id nuevo en el reintento habría creado un segundo trabajo.</figcaption>
+</figure>
 <p>Ejemplos habituales:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>SetStatus(job, "cancelled")</span></span>
 <span class="line"><span>Delete(object X)   [según la definición de la API]</span></span>
@@ -616,4 +644,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

@@ -248,7 +248,7 @@
 <line class="rule" x1="20" y1="200" x2="740" y2="200"/>
 <text class="ink small" x="380" y="222" text-anchor="middle">Hasta que vence el timeout, la vista del cliente en A y B es idéntica.</text>
 </svg></div>
-<figcaption><b>Figura 1.3</b>Lentitud y fallo se ven igual desde fuera. Un timeout convierte la espera en una decisión: una sospecha sobre el servidor, no un diagnóstico.</figcaption>
+<figcaption><b>Figura 1.2</b>Lentitud y fallo se ven igual desde fuera. Un timeout convierte la espera en una decisión: una sospecha sobre el servidor, no un diagnóstico.</figcaption>
 </figure>
 <p>Posibilidades:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>B murió</span></span>
@@ -495,7 +495,7 @@
 <text class="muted small" x="20" y="246">El cliente ve</text><text class="muted small" x="20" y="278">Tras reiniciar</text>
 <text class="ink" x="175" y="246" text-anchor="middle">timeout</text><text class="muted" x="175" y="278" text-anchor="middle">sin cambios</text><text class="ink" x="255" y="246" text-anchor="middle">timeout</text><text class="muted" x="255" y="278" text-anchor="middle">sin cambios</text><text class="ink" x="435" y="246" text-anchor="middle">timeout</text><text class="muted" x="435" y="278" text-anchor="middle">sin cambios</text><text class="ink" x="525" y="246" text-anchor="middle">timeout</text><text class="accent strong" x="525" y="278" text-anchor="middle">cambiado</text><text class="ink" x="615" y="246" text-anchor="middle">timeout</text><text class="accent strong" x="615" y="278" text-anchor="middle">cambiado</text>
 </svg></div>
-<figcaption><b>Figura 1.2</b>Cinco puntos de caída, una sola observación. El cliente ve un timeout en todos los casos, pero la escritura sobrevive solo en los casos 4 y 5, después del punto de durabilidad. Reintentar es seguro solo si el servidor reconoce <code>r9</code> como una solicitud ya aplicada.</figcaption>
+<figcaption><b>Figura 1.3</b>Cinco puntos de caída, una sola observación. El cliente ve un timeout en todos los casos, pero la escritura sobrevive solo en los casos 4 y 5, después del punto de durabilidad. Reintentar es seguro solo si el servidor reconoce <code>r9</code> como una solicitud ya aplicada.</figcaption>
 </figure>
 <p>El <strong>punto de durabilidad</strong> y el <strong>punto de confirmación al cliente</strong> no tienen por qué coincidir.</p>
 <p>Si el efecto ya es durable y se pierde la respuesta, el cliente conserva incertidumbre aunque el servidor tenga un resultado estable.</p>
@@ -628,4 +628,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

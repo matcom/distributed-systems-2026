@@ -8,21 +8,21 @@ const L = {
     f1: { title: 'Five crash points for PUT(x=7, r9)', desc: 'The client times out in all five cases, but the write survives a restart only when the crash happens after the write reached disk (cases 4 and 5).',
       client: 'Client', server: 'Server', stages: ['receive', 'validate', 'apply in memory', 'write to disk', 'send reply'], durability: 'durability point', timeout: 'timeout',
       sees: 'Client sees', after: 'After restart', unchanged: 'unchanged', changed: 'changed',
-      caption: '<b>Figure 1.2</b>Five crash points, one observation. The client sees a timeout every time, yet the write survives only in cases 4 and 5 — after the durability point. A retry is safe only if the server can recognise <code>r9</code> as a request it has already applied.' },
+      caption: '<b>Figure</b>Five crash points, one observation. The client sees a timeout every time, yet the write survives only in cases 4 and 5 — after the durability point. A retry is safe only if the server can recognise <code>r9</code> as a request it has already applied.' },
     f2: { title: 'Slow server versus crashed server', desc: 'In both executions the client observes only silence until its timeout fires, so it cannot tell which one happened.',
       a: 'A · Slow server', b: 'B · Crashed server', silence: 'silence', working: 'still working (GC pause, queue, slow disk)', late: 'late reply', dead: 'crashed, nothing will return',
       bottom: "Until the timeout fires, the client's view of A and B is identical.",
-      caption: '<b>Figure 1.3</b>Slowness and failure look the same from outside. A timeout turns waiting into a decision — a suspicion about the server, not a diagnosis.' },
+      caption: '<b>Figure</b>Slowness and failure look the same from outside. A timeout turns waiting into a decision — a suspicion about the server, not a diagnosis.' },
   },
   es: {
     f1: { title: 'Cinco puntos de caída para PUT(x=7, r9)', desc: 'El cliente recibe un timeout en los cinco casos, pero la escritura sobrevive a un reinicio solo si la caída ocurre después de llegar a disco (casos 4 y 5).',
       client: 'Cliente', server: 'Servidor', stages: ['recibe', 'valida', 'aplica (RAM)', 'a disco', 'responde'], durability: 'punto de durabilidad', timeout: 'timeout',
       sees: 'El cliente ve', after: 'Tras reiniciar', unchanged: 'sin cambios', changed: 'cambiado',
-      caption: '<b>Figura 1.2</b>Cinco puntos de caída, una sola observación. El cliente ve un timeout en todos los casos, pero la escritura sobrevive solo en los casos 4 y 5, después del punto de durabilidad. Reintentar es seguro solo si el servidor reconoce <code>r9</code> como una solicitud ya aplicada.' },
+      caption: '<b>Figura</b>Cinco puntos de caída, una sola observación. El cliente ve un timeout en todos los casos, pero la escritura sobrevive solo en los casos 4 y 5, después del punto de durabilidad. Reintentar es seguro solo si el servidor reconoce <code>r9</code> como una solicitud ya aplicada.' },
     f2: { title: 'Servidor lento frente a servidor caído', desc: 'En ambas ejecuciones el cliente solo observa silencio hasta que vence su timeout, así que no puede saber cuál ocurrió.',
       a: 'A · Servidor lento', b: 'B · Servidor caído', silence: 'silencio', working: 'sigue trabajando (pausa de GC, cola, disco lento)', late: 'respuesta tardía', dead: 'caído; no llegará nada',
       bottom: 'Hasta que vence el timeout, la vista del cliente en A y B es idéntica.',
-      caption: '<b>Figura 1.3</b>Lentitud y fallo se ven igual desde fuera. Un timeout convierte la espera en una decisión: una sospecha sobre el servidor, no un diagnóstico.' },
+      caption: '<b>Figura</b>Lentitud y fallo se ven igual desde fuera. Un timeout convierte la espera en una decisión: una sospecha sobre el servidor, no un diagnóstico.' },
   },
 };
 
@@ -80,6 +80,9 @@ ${panel(20, t.a, false)}${panel(400, t.b, true)}
 </figure>`;
 }
 
+import { seq } from './seq.mjs';
+import { CHAPTER_DIAGRAMS } from './chapter-diagrams.mjs';
+
 export const DIAGRAMS = Object.fromEntries(['en', 'es'].map((lang) => [
   `m01-distributed-systems:${lang}`,
   [
@@ -87,3 +90,8 @@ export const DIAGRAMS = Object.fromEntries(['en', 'es'].map((lang) => [
     { section: '21-', after: 'block', html: crashFigure(lang) },
   ],
 ]));
+for (const [mod, spec] of Object.entries(CHAPTER_DIAGRAMS)) {
+  for (const lang of ['en', 'es']) {
+    DIAGRAMS[`${mod}:${lang}`] = [{ section: spec.section[lang], after: spec.after || 'p', html: seq(spec, lang, `tb-${mod}-${lang}`) }];
+  }
+}

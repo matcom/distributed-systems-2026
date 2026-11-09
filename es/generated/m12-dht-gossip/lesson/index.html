@@ -359,6 +359,50 @@
 <hr>
 <div class="sl-heading-wrapper level-h2"><h2 id="18-la-convergencia-de-gossip-es-probabilística-y-medible">18. La convergencia de gossip es probabilística y medible</h2><a class="sl-anchor-link" href="#18-la-convergencia-de-gossip-es-probabilística-y-medible"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «18. La convergencia de gossip es probabilística y medible»</span></a></div>
 <p>Supón que un nodo aprende el evento <code dir="auto">E</code> en la ronda 0.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 320" role="img" aria-labelledby="tb-m12-dht-gossip-est tb-m12-dht-gossip-esd"><title id="tb-m12-dht-gossip-est">El gossip push se propaga por rondas</title><desc id="tb-m12-dht-gossip-esd">En cada ronda cada nodo informado reenvía el rumor a un par aleatorio; los nodos informados pasan de 1 a 2, 4 y 6.</desc>
+<text class="ink lane" x="16" y="63">N1</text>
+<line class="rule" x1="115" y1="58" x2="735" y2="58"/>
+<text class="ink lane" x="16" y="105">N2</text>
+<line class="rule" x1="115" y1="100" x2="735" y2="100"/>
+<text class="ink lane" x="16" y="147">N3</text>
+<line class="rule" x1="115" y1="142" x2="735" y2="142"/>
+<text class="ink lane" x="16" y="189">N4</text>
+<line class="rule" x1="115" y1="184" x2="735" y2="184"/>
+<text class="ink lane" x="16" y="231">N5</text>
+<line class="rule" x1="115" y1="226" x2="735" y2="226"/>
+<text class="ink lane" x="16" y="273">N6</text>
+<line class="rule" x1="115" y1="268" x2="735" y2="268"/>
+<line class="rule dash" x1="308" y1="32" x2="308" y2="298"/>
+<line class="rule dash" x1="491" y1="32" x2="491" y2="298"/>
+<text class="ink small strong" x="216.5" y="30" text-anchor="middle">ronda 1</text>
+<text class="ink small strong" x="399.5" y="30" text-anchor="middle">ronda 2</text>
+<text class="ink small strong" x="600.8" y="30" text-anchor="middle">ronda 3</text>
+<circle class="accent" cx="143.3" cy="58" r="5"/>
+<line class="line" x1="161.6" y1="58" x2="271.4" y2="184"/>
+<polygon class="ink" points="271.4,184.0 268.2,173.5 261.4,179.4"/>
+<circle class="accent" cx="271.4" cy="184" r="5"/>
+<line class="line" x1="344.6" y1="58" x2="430" y2="100"/>
+<polygon class="ink" points="430.0,100.0 423.0,91.5 419.0,99.6"/>
+<line class="line" x1="344.6" y1="184" x2="442.2" y2="268"/>
+<polygon class="ink" points="442.2,268.0 437.6,258.1 431.7,264.9"/>
+<circle class="accent" cx="430" cy="100" r="5"/>
+<circle class="accent" cx="442.2" cy="268" r="5"/>
+<line class="line" x1="527.6" y1="100" x2="613" y2="142"/>
+<polygon class="ink" points="613.0,142.0 606.0,133.5 602.0,141.6"/>
+<line class="line" x1="527.6" y1="268" x2="613" y2="226"/>
+<polygon class="ink" points="613.0,226.0 602.0,226.4 606.0,234.5"/>
+<line class="line dash" x1="637.4" y1="184" x2="710.6" y2="58"/>
+<polygon class="ink" points="710.6,58.0 701.7,64.4 709.5,68.9"/>
+<text class="ink small" x="687.96" y="78.19999999999999" text-anchor="end">ya lo sabía</text>
+<circle class="accent" cx="613" cy="142" r="5"/>
+<circle class="accent" cx="613" cy="226" r="5"/>
+<text class="muted small" x="216.5" y="314" text-anchor="middle">informados: 2</text>
+<text class="muted small" x="399.5" y="314" text-anchor="middle">informados: 4</text>
+<text class="muted small" x="600.8" y="314" text-anchor="middle">informados: 6</text>
+</svg></div>
+<figcaption><b>Figura 5.1</b>Cada nodo informado reenvía el rumor a un par aleatorio en cada ronda. El conjunto informado casi se duplica en cada ronda hasta saturar el clúster; los mensajes posteriores llegan cada vez más a nodos que ya lo sabían: es el precio de no coordinar.</figcaption>
+</figure>
 <p>Sigue:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>ronda 0: 1 nodo informado</span></span>
 <span class="line"><span>ronda 1: 2</span></span>
@@ -711,4 +755,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

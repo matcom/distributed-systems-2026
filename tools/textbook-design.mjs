@@ -179,19 +179,24 @@ const pages = {
     if (firstOut !== first) {
       c = c.replace('<div class="ds-next-action">', `<div class="tb-box"><span class="tb-kicker tb-ui">${t.revisit}</span><p>${t.predicted}</p><div class="tb-echo" data-tb-echo="${mod}:prediction" data-empty="${t.noPrediction}"></div><p>${t.revisitQ}</p></div>\n<div class="ds-next-action">`);
     }
-    if (DIAGRAMS[`${mod}:${f.lang}`]) c = c.replace(/<span>(Figure|Figura)<\/span>/, (m, w) => `<span>${w} ${(f.chapter.match(/\d+/) || [''])[0]}.1</span>`);
-    // Chapter diagrams: inserted after the first list/code block (or paragraph) of their section.
+    // Chapter diagrams: after the first paragraph of their section, or after its
+    // first list/code block when `after: 'block'` (falling back to the paragraph).
     for (const d of DIAGRAMS[`${mod}:${f.lang}`] || []) {
       const secs = splitSections(c);
       const i = secs.findIndex((s) => sectionId(s).startsWith(d.section));
-      if (i < 0) continue;
+      if (i < 0) { console.warn(`diagram for ${mod}:${f.lang} not placed: no lesson section starting with "${d.section}"`); continue; }
       const s = secs[i];
-      const candidates = (d.after === 'p' ? ['</p>'] : ['</ol>', '</pre>'])
-        .map((a) => [a, s.indexOf(a)]).filter(([, at]) => at > 0).sort((x, y) => x[1] - y[1]);
-      if (!candidates.length) continue;
-      const [a, at] = candidates[0];
+      const find = (tags) => tags.map((a) => [a, s.indexOf(a)]).filter(([, at]) => at > 0).sort((x, y) => x[1] - y[1])[0];
+      const [a, at] = (d.after === 'p' ? null : find(['</ol>', '</pre>'])) || find(['</p>']) || [];
+      if (!a) continue;
       secs[i] = s.slice(0, at + a.length) + '\n' + d.html + s.slice(at + a.length);
       c = secs.join('');
+    }
+    // Number every figure in reading order: "Figure 6.1", "Figure 6.2"… (warm-up: "Figure 1"…).
+    if (DIAGRAMS[`${mod}:${f.lang}`]) {
+      const n = (f.chapter.match(/\d+/) || [''])[0];
+      let k = 0;
+      c = c.replace(/<figcaption>(<span>|<b>)(Figure|Figura)[^<]*(<\/span>|<\/b>)/g, (m, o, w, cl) => `<figcaption>${o}${w} ${n ? n + '.' : ''}${++k}${cl}`);
     }
     return c;
   },
@@ -318,10 +323,16 @@ for (const { lang, mod, dir } of chapterDirs) {
   outputs.sort(([a], [b]) => (a === `${dir}/index.html`) - (b === `${dir}/index.html`));
   for (const [file, out] of outputs) { write(file, out); pagesDone++; }
 }
+// Home pages: "Continue: <chapter · step>" as the main action once a student has
+// opened any chapter step on this device (stored by textbook.js).
+const CONTINUE = { 'index.html': 'Continue: ', 'es/index.html': 'Continuar: ' };
+const continueScript = (label) => `<script data-tb-continue>(()=>{try{const l=JSON.parse(localStorage.getItem('tb:last:'+document.documentElement.lang));const box=document.querySelector('.hero .actions'),p=box&&box.querySelector('.primary');if(!l||!p||!l.href.startsWith(${JSON.stringify(BASE)}))return;const a=p.cloneNode(true);a.href=l.href;a.firstChild.textContent=${JSON.stringify(label)}+l.title;p.classList.replace('primary','minimal');p.querySelector('svg')?.remove();box.prepend(a)}catch{}})()</script>`;
+
 // Every page: short sidebar names; chapter pages: current asset names.
 for (const file of walk()) {
   const src0 = read(file);
   let html = shortSidebar(src0);
+  if (CONTINUE[file] && !html.includes('data-tb-continue')) html = html.replace('</body>', `${continueScript(CONTINUE[file])}</body>`);
   if (chapterFiles.has(file)) {
     html = html.replace(new RegExp(`${BASE}_astro/textbook\\.\\w+\\.css`), assets.css).replace(new RegExp(`${BASE}_astro/textbook\\.\\w+\\.js`), assets.js);
   }

@@ -301,7 +301,7 @@
 <line class="rule" x1="20" y1="200" x2="740" y2="200"/>
 <text class="ink small" x="380" y="222" text-anchor="middle">Until the timeout fires, the client's view of A and B is identical.</text>
 </svg></div>
-<figcaption><b>Figure 1.3</b>Slowness and failure look the same from outside. A timeout turns waiting into a decision — a suspicion about the server, not a diagnosis.</figcaption>
+<figcaption><b>Figure 1.2</b>Slowness and failure look the same from outside. A timeout turns waiting into a decision — a suspicion about the server, not a diagnosis.</figcaption>
 </figure>
 <p>Possible explanations include:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>B crashed</span></span>
@@ -585,7 +585,7 @@
 <text class="muted small" x="20" y="246">Client sees</text><text class="muted small" x="20" y="278">After restart</text>
 <text class="ink" x="175" y="246" text-anchor="middle">timeout</text><text class="muted" x="175" y="278" text-anchor="middle">unchanged</text><text class="ink" x="255" y="246" text-anchor="middle">timeout</text><text class="muted" x="255" y="278" text-anchor="middle">unchanged</text><text class="ink" x="435" y="246" text-anchor="middle">timeout</text><text class="muted" x="435" y="278" text-anchor="middle">unchanged</text><text class="ink" x="525" y="246" text-anchor="middle">timeout</text><text class="accent strong" x="525" y="278" text-anchor="middle">changed</text><text class="ink" x="615" y="246" text-anchor="middle">timeout</text><text class="accent strong" x="615" y="278" text-anchor="middle">changed</text>
 </svg></div>
-<figcaption><b>Figure 1.2</b>Five crash points, one observation. The client sees a timeout every time, yet the write survives only in cases 4 and 5 — after the durability point. A retry is safe only if the server can recognise <code>r9</code> as a request it has already applied.</figcaption>
+<figcaption><b>Figure 1.3</b>Five crash points, one observation. The client sees a timeout every time, yet the write survives only in cases 4 and 5 — after the durability point. A retry is safe only if the server can recognise <code>r9</code> as a request it has already applied.</figcaption>
 </figure>
 <p>The server might crash:</p>
 <ol>
@@ -694,4 +694,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

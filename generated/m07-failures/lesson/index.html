@@ -708,6 +708,34 @@
 <p>Assume:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>heartbeat every = 1 s</span></span>
 <span class="line"><span>suspicion timeout = 3 s</span></span></code></pre>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 204" role="img" aria-labelledby="tb-m07-failures-ent tb-m07-failures-end"><title id="tb-m07-failures-ent">Heartbeat false suspicion</title><desc id="tb-m07-failures-end">Node A sends heartbeats; a pause delays the next one past the monitor timeout; the monitor suspects A; the late heartbeat then arrives.</desc>
+<text class="ink lane" x="16" y="53">Node A</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="163">Monitor</text>
+<line class="rule" x1="115" y1="158" x2="735" y2="158"/>
+<line class="line" x1="137.2" y1="48" x2="179.9" y2="158"/>
+<polygon class="ink" points="179.9,158.0 180.5,147.0 172.1,150.3"/>
+<text class="ink small" x="165.55" y="98" text-anchor="start">hb</text>
+<line class="line" x1="222.60000000000002" y1="48" x2="265.3" y2="158"/>
+<polygon class="ink" points="265.3,158.0 265.9,147.0 257.5,150.3"/>
+<text class="ink small" x="250.95000000000002" y="98" text-anchor="start">hb</text>
+<rect class="band" x="283.6" y="40" width="231.80000000000007" height="16" rx="3"/>
+<text class="muted small" x="399.50000000000006" y="35" text-anchor="middle">GC pause (alive, silent)</text>
+<rect class="band" x="265.3" y="150" width="164.7" height="16" rx="3"/>
+<line class="alert-line" x1="430" y1="146" x2="430" y2="170"/>
+<text class="alert small strong" x="430" y="186" text-anchor="middle">timeout → suspect A</text>
+<line class="line" x1="521.5" y1="48" x2="564.2" y2="158"/>
+<polygon class="ink" points="564.2,158.0 564.8,147.0 556.4,150.3"/>
+<text class="ink small" x="549.85" y="98" text-anchor="start">hb (late)</text>
+<circle class="accent" cx="564.2" cy="158" r="5"/>
+<text class="accent strong small" x="590.2" y="179" text-anchor="middle">A alive again</text>
+<line class="line" x1="613" y1="48" x2="655.7" y2="158"/>
+<polygon class="ink" points="655.7,158.0 656.3,147.0 647.9,150.3"/>
+<text class="ink small" x="641.35" y="98" text-anchor="start">hb</text>
+</svg></div>
+<figcaption><b>Figure 10.1</b>Node A never crashed: a pause delayed its heartbeat past the monitor's timeout. Failure detection is suspicion; the monitor has to act before it can know which story is true.</figcaption>
+</figure>
 <p>Normal arrivals at A:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>t=0</span></span>
 <span class="line"><span>t=1</span></span>
@@ -854,4 +882,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

@@ -350,6 +350,35 @@
 <p>The architecture should identify which component is authoritative.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="11-leases-turn-silence-into-eventual-removal">11. Leases turn silence into eventual removal</h2><a class="sl-anchor-link" href="#11-leases-turn-silence-into-eventual-removal"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “11. Leases turn silence into eventual removal”</span></a></div>
 <p>Suppose a worker registers once and then crashes.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m04-architecture-discovery-ent tb-m04-architecture-discovery-end"><title id="tb-m04-architecture-discovery-ent">A lease keeps a dead worker listed until it expires</title><desc id="tb-m04-architecture-discovery-end">The worker registers with a 10 s lease and renews it once, then crashes; the registry keeps the entry until the lease expires, and a client resolving in that window receives the dead address.</desc>
+<text class="ink lane" x="16" y="53">Worker</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">Registry</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">Client</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<line class="line" x1="137.2" y1="48" x2="198.2" y2="118"/>
+<polygon class="ink" points="198.2,118.0 195.0,107.5 188.2,113.4"/>
+<text class="ink small" x="165.54999999999998" y="67.5" text-anchor="start">register (lease 10 s)</text>
+<line class="line" x1="271.4" y1="48" x2="332.4" y2="118"/>
+<polygon class="ink" points="332.4,118.0 329.2,107.5 322.4,113.4"/>
+<text class="ink small" x="299.75" y="67.5" text-anchor="start">renew</text>
+<g class="crash"><circle class="alert" cx="381.2" cy="48" r="10"/><text x="381.2" y="52" text-anchor="middle">✕</text></g>
+<text class="alert small strong" x="381.2" y="32" text-anchor="middle">crash</text>
+<rect class="band" x="332.4" y="110" width="292.80000000000007" height="16" rx="3"/>
+<text class="muted small" x="478.8" y="105" text-anchor="middle">still listed</text>
+<line class="line" x1="442.2" y1="188" x2="491" y2="118"/>
+<polygon class="ink" points="491.0,118.0 481.6,123.6 489.0,128.8"/>
+<text class="ink small" x="458.6" y="148" text-anchor="end">resolve</text>
+<line class="line" x1="503.2" y1="118" x2="552" y2="188"/>
+<polygon class="ink" points="552.0,188.0 550.0,177.2 542.6,182.4"/>
+<text class="ink small" x="535.6" y="148" text-anchor="start">addr of dead worker</text>
+<line class="alert-line" x1="625.2" y1="106" x2="625.2" y2="130"/>
+<text class="alert small strong" x="625.2" y="100" text-anchor="middle">lease expires → removed</text>
+</svg></div>
+<figcaption><b>Figure 8.1</b>A lease turns silence into eventual removal. Between the crash and the expiry, the registry still answers with the dead worker's address: discovery data can be stale even when the registry is behaving correctly.</figcaption>
+</figure>
 <p>If the registry retains the entry forever, clients may repeatedly select a dead endpoint.</p>
 <p>A lease or TTL-based registration says:</p>
 <blockquote>
@@ -700,4 +729,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

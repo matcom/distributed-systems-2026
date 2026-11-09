@@ -350,6 +350,35 @@
 <p>La arquitectura debe identificar qué componente es autoritativo.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="11-los-leases-convierten-el-silencio-en-eliminación-eventual">11. Los leases convierten el silencio en eliminación eventual</h2><a class="sl-anchor-link" href="#11-los-leases-convierten-el-silencio-en-eliminación-eventual"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «11. Los leases convierten el silencio en eliminación eventual»</span></a></div>
 <p>Supón que un trabajador se registra una vez y después cae.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m04-architecture-discovery-est tb-m04-architecture-discovery-esd"><title id="tb-m04-architecture-discovery-est">Un lease mantiene registrado a un trabajador muerto hasta que expira</title><desc id="tb-m04-architecture-discovery-esd">El trabajador se registra con un lease de 10 s y lo renueva una vez; después cae. El registro conserva la entrada hasta que el lease expira, y un cliente que resuelve en esa ventana recibe la dirección muerta.</desc>
+<text class="ink lane" x="16" y="53">Trabajador</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">Registro</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">Cliente</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<line class="line" x1="137.2" y1="48" x2="198.2" y2="118"/>
+<polygon class="ink" points="198.2,118.0 195.0,107.5 188.2,113.4"/>
+<text class="ink small" x="165.54999999999998" y="67.5" text-anchor="start">registrar (lease 10 s)</text>
+<line class="line" x1="271.4" y1="48" x2="332.4" y2="118"/>
+<polygon class="ink" points="332.4,118.0 329.2,107.5 322.4,113.4"/>
+<text class="ink small" x="299.75" y="67.5" text-anchor="start">renovar</text>
+<g class="crash"><circle class="alert" cx="381.2" cy="48" r="10"/><text x="381.2" y="52" text-anchor="middle">✕</text></g>
+<text class="alert small strong" x="381.2" y="32" text-anchor="middle">caída</text>
+<rect class="band" x="332.4" y="110" width="292.80000000000007" height="16" rx="3"/>
+<text class="muted small" x="478.8" y="105" text-anchor="middle">sigue listada</text>
+<line class="line" x1="442.2" y1="188" x2="491" y2="118"/>
+<polygon class="ink" points="491.0,118.0 481.6,123.6 489.0,128.8"/>
+<text class="ink small" x="458.6" y="148" text-anchor="end">resolver</text>
+<line class="line" x1="503.2" y1="118" x2="552" y2="188"/>
+<polygon class="ink" points="552.0,188.0 550.0,177.2 542.6,182.4"/>
+<text class="ink small" x="535.6" y="148" text-anchor="start">dirección del muerto</text>
+<line class="alert-line" x1="625.2" y1="106" x2="625.2" y2="130"/>
+<text class="alert small strong" x="625.2" y="100" text-anchor="middle">expira el lease → eliminado</text>
+</svg></div>
+<figcaption><b>Figura 8.1</b>Un lease convierte el silencio en una eliminación eventual. Entre la caída y la expiración, el registro sigue devolviendo la dirección del trabajador muerto: la información de descubrimiento puede estar obsoleta aunque el registro funcione bien.</figcaption>
+</figure>
 <p>Si el registro conserva la entrada para siempre, los clientes pueden seleccionar repetidamente un endpoint muerto.</p>
 <p>Una entrada basada en lease o TTL expresa:</p>
 <blockquote>
@@ -700,4 +729,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

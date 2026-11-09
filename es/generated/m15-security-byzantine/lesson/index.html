@@ -152,7 +152,7 @@
 <p>Un sistema que verifica identidad pero no autorización solo ha resuelto la mitad del problema.</p>
 <figure class="ds-book-figure">
   <img src="../../../../assets/book/m15-trust-boundaries-es.svg" alt="Cliente, gateway, servicio y almacenamiento separados por límites explícitos de identidad y autorización." loading="lazy" decoding="async" />
-  <figcaption><span>Figura</span>La conectividad de red no es identidad, y la identidad no es autoridad. Cada límite necesita una decisión explícita de confianza y una aplicación observable.</figcaption>
+  <figcaption><span>Figura 12.1</span>La conectividad de red no es identidad, y la identidad no es autoridad. Cada límite necesita una decisión explícita de confianza y una aplicación observable.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="4-identidad-es-más-que-una-dirección">4. Identidad es más que una dirección</h2><a class="sl-anchor-link" href="#4-identidad-es-más-que-una-dirección"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «4. Identidad es más que una dirección»</span></a></div>
 <p>Una IP puede cambiar por restart, NAT, proxy, balanceador o migración.</p>
@@ -263,6 +263,37 @@
 <p>Las pruebas de corrección basadas en “los nodos correctos siguen el protocolo” deben revisarse.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="14-equivocación">14. Equivocación</h2><a class="sl-anchor-link" href="#14-equivocación"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «14. Equivocación»</span></a></div>
 <p>Ejemplo:</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 274" role="img" aria-labelledby="tb-m15-security-byzantine-est tb-m15-security-byzantine-esd"><title id="tb-m15-security-byzantine-est">Equivocación de una réplica bizantina</title><desc id="tb-m15-security-byzantine-esd">La réplica defectuosa R1 envía el valor A a R2 y el valor B a R3 y R4; cuando las réplicas honestas intercambian lo recibido, R2 detecta el conflicto.</desc>
+<text class="ink lane" x="16" y="53">R1 (defectuosa)</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="113">R2</text>
+<line class="rule" x1="115" y1="108" x2="735" y2="108"/>
+<text class="ink lane" x="16" y="173">R3</text>
+<line class="rule" x1="115" y1="168" x2="735" y2="168"/>
+<text class="ink lane" x="16" y="233">R4</text>
+<line class="rule" x1="115" y1="228" x2="735" y2="228"/>
+<line class="line" x1="149.4" y1="48" x2="234.8" y2="108"/>
+<polygon class="ink" points="234.8,108.0 229.2,98.6 224.0,105.9"/>
+<text class="ink small" x="204.37" y="76" text-anchor="start">v = A</text>
+<line class="line" x1="149.4" y1="48" x2="259.2" y2="168"/>
+<polygon class="ink" points="259.2,168.0 255.8,157.6 249.1,163.7"/>
+<text class="ink small" x="239.75" y="133" text-anchor="start">v = B</text>
+<line class="line" x1="149.4" y1="48" x2="283.6" y2="228"/>
+<polygon class="ink" points="283.6,228.0 281.2,217.3 274.0,222.7"/>
+<line class="line dash" x1="344.6" y1="108" x2="405.6" y2="168"/>
+<polygon class="ink" points="405.6,168.0 401.6,157.8 395.3,164.2"/>
+<text class="ink small" x="383.1" y="133" text-anchor="start">recibí A</text>
+<line class="line dash" x1="454.40000000000003" y1="168" x2="515.4000000000001" y2="108"/>
+<polygon class="ink" points="515.4,108.0 505.1,111.8 511.4,118.2"/>
+<text class="ink small" x="492.9000000000001" y="133" text-anchor="start">recibí B</text>
+<line class="line dash" x1="442.2" y1="228" x2="527.6" y2="108"/>
+<polygon class="ink" points="527.6,108.0 518.1,113.5 525.5,118.8"/>
+<g class="crash"><circle class="alert" cx="576.4" cy="108" r="10"/><text x="576.4" y="112" text-anchor="middle">!</text></g>
+<text class="alert small strong" x="592.4" y="92" text-anchor="start">A ≠ B: R1 se contradijo</text>
+</svg></div>
+<figcaption><b>Figura 12.2</b>Una réplica bizantina puede decir cosas distintas a pares distintos. Ninguna réplica honesta puede notarlo solo con su propio mensaje; comparar lo recibido expone la equivocación. Tolerar <i>f</i> réplicas así exige <i>n</i> ≥ 3<i>f</i> + 1; aquí 4 réplicas para <i>f</i> = 1.</figcaption>
+</figure>
 <ul>
 <li>réplica X dice a A que value=red;</li>
 <li>la misma réplica X dice a B que value=blue para la misma posición.</li>
@@ -770,4 +801,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

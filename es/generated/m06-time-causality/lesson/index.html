@@ -152,7 +152,7 @@
 <p>Si un sistema exige causalidad o consistencia, necesita un mecanismo diseñado para esa garantía.</p>
 <figure class="ds-book-figure">
   <img src="../../../../assets/book/m06-causality-es.svg" alt="Los mensajes establecen orden causal aunque los relojes de pared no coincidan." loading="lazy" decoding="async" />
-  <figcaption><span>Figura</span>La causalidad sigue el orden local y los mensajes. Las marcas de reloj son mediciones útiles, no la definición de sucedió-antes.</figcaption>
+  <figcaption><span>Figura 6.1</span>La causalidad sigue el orden local y los mensajes. Las marcas de reloj son mediciones útiles, no la definición de sucedió-antes.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="4-las-correcciones-del-reloj-de-pared-sorprenden-a-los-programas">4. Las correcciones del reloj de pared sorprenden a los programas</h2><a class="sl-anchor-link" href="#4-las-correcciones-del-reloj-de-pared-sorprenden-a-los-programas"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «4. Las correcciones del reloj de pared sorprenden a los programas»</span></a></div>
 <p>El tiempo civil puede corregirse cuando el sistema detecta error.</p>
@@ -233,6 +233,41 @@
 <p>Eventos concurrentes pueden recibir valores distintos.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="9-ejemplo-trabajado--lamport">9. Ejemplo trabajado — Lamport</h2><a class="sl-anchor-link" href="#9-ejemplo-trabajado--lamport"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «9. Ejemplo trabajado — Lamport»</span></a></div>
 <p>Tres procesos empiezan en 0.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m06-time-causality-est tb-m06-time-causality-esd"><title id="tb-m06-time-causality-est">Relojes de Lamport en tres procesos</title><desc id="tb-m06-time-causality-esd">Cada evento incrementa el contador local; los mensajes llevan el contador; al recibir, el contador pasa a max(local, recibido) + 1.</desc>
+<text class="ink lane" x="16" y="53">P1</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">P2</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">P3</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<circle class="ink" cx="155.5" cy="48" r="4"/>
+<text class="muted small" x="155.5" y="37" text-anchor="middle">1</text>
+<circle class="ink" cx="234.8" cy="48" r="4"/>
+<text class="muted small" x="234.8" y="37" text-anchor="middle">2 envío</text>
+<line class="line" x1="234.8" y1="48" x2="344.6" y2="118"/>
+<polygon class="ink" points="344.6,118.0 338.6,108.8 333.7,116.4"/>
+<text class="ink small" x="285.72" y="71" text-anchor="start">m1 (2)</text>
+<circle class="ink" cx="186" cy="118" r="4"/>
+<text class="muted small" x="186" y="107" text-anchor="middle">1</text>
+<circle class="accent" cx="344.6" cy="118" r="5"/>
+<text class="accent strong small" x="344.6" y="139" text-anchor="middle">max(1,2)+1 = 3</text>
+<circle class="ink" cx="442.2" cy="118" r="4"/>
+<text class="muted small" x="442.2" y="107" text-anchor="middle">4 envío</text>
+<line class="line" x1="442.2" y1="118" x2="564.2" y2="188"/>
+<polygon class="ink" points="564.2,188.0 557.8,179.1 553.3,186.9"/>
+<text class="ink small" x="498" y="141" text-anchor="start">m2 (4)</text>
+<circle class="ink" cx="210.4" cy="188" r="4"/>
+<text class="muted small" x="210.4" y="209" text-anchor="middle">1</text>
+<circle class="ink" cx="308" cy="188" r="4"/>
+<text class="muted small" x="308" y="209" text-anchor="middle">2</text>
+<circle class="accent" cx="564.2" cy="188" r="5"/>
+<text class="accent strong small" x="564.2" y="209" text-anchor="middle">max(2,4)+1 = 5</text>
+<circle class="ink" cx="503.2" cy="48" r="4"/>
+<text class="muted small" x="503.2" y="37" text-anchor="middle">3 (concurrente con 4)</text>
+</svg></div>
+<figcaption><b>Figura 6.2</b>Si <i>a</i> ocurrió antes que <i>b</i>, entonces L(<i>a</i>) &lt; L(<i>b</i>). Lo contrario no se cumple: el evento de P1 con L = 3 y el envío de P2 con L = 4 son concurrentes. Un número menor no prueba por sí solo la relación ocurrió-antes.</figcaption>
+</figure>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>P1: local a, send m a P2</span></span>
 <span class="line"><span>P2: local b, receive m, send n a P3</span></span>
 <span class="line"><span>P3: local c, receive n</span></span></code></pre>
@@ -478,4 +513,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

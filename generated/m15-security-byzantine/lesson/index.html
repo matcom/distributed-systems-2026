@@ -239,7 +239,7 @@
 <p>Do not merge these two checks conceptually.</p>
 <figure class="ds-book-figure">
   <img src="../../../assets/book/m15-trust-boundaries.svg" alt="Client, gateway, service, and storage separated by explicit identity and authorization boundaries." loading="lazy" decoding="async" />
-  <figcaption><span>Figure</span>Network reachability is not identity, and identity is not authority. Each boundary needs an explicit trust decision and observable enforcement.</figcaption>
+  <figcaption><span>Figure 12.1</span>Network reachability is not identity, and identity is not authority. Each boundary needs an explicit trust decision and observable enforcement.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="4-identity-is-more-than-an-address">4. Identity is more than an address</h2><a class="sl-anchor-link" href="#4-identity-is-more-than-an-address"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “4. Identity is more than an address”</span></a></div>
 <p>Chapter 8 separated names, IDs, addresses, and process incarnations. Security strengthens that distinction.</p>
@@ -374,6 +374,37 @@
 <p>This is fundamentally harder than a simple crash.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="14-equivocation-is-a-characteristic-byzantine-behavior">14. Equivocation is a characteristic Byzantine behavior</h2><a class="sl-anchor-link" href="#14-equivocation-is-a-characteristic-byzantine-behavior"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “14. Equivocation is a characteristic Byzantine behavior”</span></a></div>
 <p>Consider node X telling two peers:</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 274" role="img" aria-labelledby="tb-m15-security-byzantine-ent tb-m15-security-byzantine-end"><title id="tb-m15-security-byzantine-ent">Equivocation by a Byzantine replica</title><desc id="tb-m15-security-byzantine-end">Faulty replica R1 sends value A to R2 and value B to R3 and R4; when the honest replicas exchange what they received, R2 detects the conflict.</desc>
+<text class="ink lane" x="16" y="53">R1 (faulty)</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="113">R2</text>
+<line class="rule" x1="115" y1="108" x2="735" y2="108"/>
+<text class="ink lane" x="16" y="173">R3</text>
+<line class="rule" x1="115" y1="168" x2="735" y2="168"/>
+<text class="ink lane" x="16" y="233">R4</text>
+<line class="rule" x1="115" y1="228" x2="735" y2="228"/>
+<line class="line" x1="149.4" y1="48" x2="234.8" y2="108"/>
+<polygon class="ink" points="234.8,108.0 229.2,98.6 224.0,105.9"/>
+<text class="ink small" x="204.37" y="76" text-anchor="start">v = A</text>
+<line class="line" x1="149.4" y1="48" x2="259.2" y2="168"/>
+<polygon class="ink" points="259.2,168.0 255.8,157.6 249.1,163.7"/>
+<text class="ink small" x="239.75" y="133" text-anchor="start">v = B</text>
+<line class="line" x1="149.4" y1="48" x2="283.6" y2="228"/>
+<polygon class="ink" points="283.6,228.0 281.2,217.3 274.0,222.7"/>
+<line class="line dash" x1="344.6" y1="108" x2="405.6" y2="168"/>
+<polygon class="ink" points="405.6,168.0 401.6,157.8 395.3,164.2"/>
+<text class="ink small" x="383.1" y="133" text-anchor="start">I got A</text>
+<line class="line dash" x1="454.40000000000003" y1="168" x2="515.4000000000001" y2="108"/>
+<polygon class="ink" points="515.4,108.0 505.1,111.8 511.4,118.2"/>
+<text class="ink small" x="492.9000000000001" y="133" text-anchor="start">I got B</text>
+<line class="line dash" x1="442.2" y1="228" x2="527.6" y2="108"/>
+<polygon class="ink" points="527.6,108.0 518.1,113.5 525.5,118.8"/>
+<g class="crash"><circle class="alert" cx="576.4" cy="108" r="10"/><text x="576.4" y="112" text-anchor="middle">!</text></g>
+<text class="alert small strong" x="592.4" y="92" text-anchor="start">A ≠ B: R1 equivocated</text>
+</svg></div>
+<figcaption><b>Figure 12.2</b>A Byzantine replica can tell different peers different things. No honest replica can notice from its own message alone; comparing what they received exposes the equivocation. Tolerating <i>f</i> such replicas needs <i>n</i> ≥ 3<i>f</i> + 1, here 4 replicas for <i>f</i> = 1.</figcaption>
+</figure>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>To A: value = red</span></span>
 <span class="line"><span>To B: value = blue</span></span></code></pre>
 <p>A crash-only protocol may never have been designed to handle this contradiction.</p>
@@ -891,4 +922,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

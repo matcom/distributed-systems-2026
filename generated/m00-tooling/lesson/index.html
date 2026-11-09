@@ -219,6 +219,38 @@
 <p>Changing five things at once produces a demonstration, not an experiment.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="6-structured-logs-turn-stories-into-reconstructable-evidence">6. Structured logs turn stories into reconstructable evidence</h2><a class="sl-anchor-link" href="#6-structured-logs-turn-stories-into-reconstructable-evidence"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “6. Structured logs turn stories into reconstructable evidence”</span></a></div>
 <p>Unstructured output such as:</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m00-tooling-ent tb-m00-tooling-end"><title id="tb-m00-tooling-ent">One request id across three processes</title><desc id="tb-m00-tooling-end">A client request r42 crosses node A and node B; each process writes r42 in its own log, so the path can be reconstructed by searching every log for r42.</desc>
+<text class="ink lane" x="16" y="53">Client</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">Node A</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">Node B</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<line class="line" x1="137.2" y1="48" x2="222.60000000000002" y2="118"/>
+<polygon class="ink" points="222.6,118.0 217.7,108.2 212.0,115.1"/>
+<text class="ink small" x="186.9" y="78" text-anchor="start">GET /work  req=r42</text>
+<circle class="ink" cx="222.60000000000002" cy="118" r="4"/>
+<text class="muted small" x="222.60000000000002" y="139" text-anchor="middle">log: recv r42</text>
+<line class="line" x1="283.6" y1="118" x2="369" y2="188"/>
+<polygon class="ink" points="369.0,188.0 364.1,178.2 358.4,185.1"/>
+<text class="ink small" x="333.3" y="148" text-anchor="start">call  req=r42</text>
+<circle class="ink" cx="369" cy="188" r="4"/>
+<text class="muted small" x="369" y="209" text-anchor="middle">log: recv r42</text>
+<rect class="accent" x="369" y="184" width="97.60000000000002" height="8" rx="2" opacity=".55"/>
+<circle class="ink" cx="478.79999999999995" cy="188" r="4"/>
+<text class="muted small" x="492.79999999999995" y="209" text-anchor="middle">log: done r42</text>
+<line class="line" x1="478.79999999999995" y1="188" x2="564.2" y2="118"/>
+<polygon class="ink" points="564.2,118.0 553.6,120.9 559.3,127.8"/>
+<text class="ink small" x="512.42" y="162" text-anchor="start">ok</text>
+<circle class="ink" cx="576.4" cy="118" r="4"/>
+<text class="muted small" x="568.4" y="107" text-anchor="end">log: reply r42</text>
+<line class="line" x1="588.6" y1="118" x2="674" y2="48"/>
+<polygon class="ink" points="674.0,48.0 663.4,50.9 669.1,57.8"/>
+<text class="ink small" x="639.3" y="78" text-anchor="start">200 ok</text>
+</svg></div>
+<figcaption><b>Figure 1</b>A request identifier stitches three local logs into one story. Searching every log for <code>r42</code> recovers the path and the work done at each hop, without relying on the three clocks to agree.</figcaption>
+</figure>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>handling request</span></span>
 <span class="line"><span>finished</span></span>
 <span class="line"><span>error</span></span></code></pre>
@@ -523,4 +555,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

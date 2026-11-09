@@ -198,7 +198,7 @@
 <hr>
 <figure class="ds-book-figure">
   <img src="../../../assets/book/m08-replica-histories.svg" alt="Two replicas expose different read histories after one acknowledged write." loading="lazy" decoding="async" />
-  <figcaption><span>Figure</span>The final stored value is not enough to name a consistency model. Consistency constrains the histories clients are allowed to observe.</figcaption>
+  <figcaption><span>Figure 9.1</span>The final stored value is not enough to name a consistency model. Consistency constrains the histories clients are allowed to observe.</figcaption>
 </figure>
 <div class="sl-heading-wrapper level-h2"><h2 id="5-synchronous-replication-couples-acknowledgement-to-copies">5. Synchronous replication couples acknowledgement to copies</h2><a class="sl-anchor-link" href="#5-synchronous-replication-couples-acknowledgement-to-copies"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “5. Synchronous replication couples acknowledgement to copies”</span></a></div>
 <p>In a synchronous-style policy, the writer waits for some replication condition before acknowledging.</p>
@@ -376,6 +376,54 @@
 <hr>
 <div class="sl-heading-wrapper level-h2"><h2 id="17-worked-quorum-example--n3">17. Worked quorum example — N=3</h2><a class="sl-anchor-link" href="#17-worked-quorum-example--n3"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Section titled “17. Worked quorum example — N=3”</span></a></div>
 <p>Let:</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 318" role="img" aria-labelledby="tb-m08-replication-consistency-ent tb-m08-replication-consistency-end"><title id="tb-m08-replication-consistency-ent">Quorum overlap with N=3, W=2, R=2</title><desc id="tb-m08-replication-consistency-end">The write reaches R1 and R2 but not R3; the read asks R2 and R3; R2 has v2, so the read returns v2.</desc>
+<text class="ink lane" x="16" y="53">Writer</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="109">R1</text>
+<line class="rule" x1="115" y1="104" x2="735" y2="104"/>
+<text class="ink lane" x="16" y="165">R2</text>
+<line class="rule" x1="115" y1="160" x2="735" y2="160"/>
+<text class="ink lane" x="16" y="221">R3</text>
+<line class="rule" x1="115" y1="216" x2="735" y2="216"/>
+<text class="ink lane" x="16" y="277">Reader</text>
+<line class="rule" x1="115" y1="272" x2="735" y2="272"/>
+<line class="line" x1="137.2" y1="48" x2="186" y2="104"/>
+<polygon class="ink" points="186.0,104.0 182.8,93.5 176.0,99.4"/>
+<text class="ink small" x="165.16" y="68.2" text-anchor="start">put v2</text>
+<line class="line" x1="137.2" y1="48" x2="210.4" y2="160"/>
+<polygon class="ink" points="210.4,160.0 208.7,149.2 201.2,154.1"/>
+<line class="line" x1="137.2" y1="48" x2="242.12" y2="192.48"/>
+<g class="crash"><circle class="alert" cx="242.12" cy="192.48" r="8"/><text x="242.12" y="196.48" text-anchor="middle">✕</text></g>
+<circle class="accent" cx="186" cy="104" r="5"/>
+<text class="accent strong small" x="198" y="93" text-anchor="middle">v2</text>
+<circle class="accent" cx="210.4" cy="160" r="5"/>
+<text class="accent strong small" x="222.4" y="149" text-anchor="middle">v2</text>
+<circle class="ink" cx="308" cy="216" r="4"/>
+<text class="muted small" x="308" y="205" text-anchor="middle">still v1</text>
+<line class="line" x1="234.8" y1="104" x2="295.8" y2="48"/>
+<polygon class="ink" points="295.8,48.0 285.4,51.4 291.5,58.1"/>
+<text class="ink small" x="279.40000000000003" y="65.4" text-anchor="start">ack</text>
+<line class="line" x1="247" y1="160" x2="320.20000000000005" y2="48"/>
+<polygon class="ink" points="320.2,48.0 311.0,53.9 318.5,58.8"/>
+<line class="line" x1="344.6" y1="36" x2="344.6" y2="60"/>
+<text class="ink small strong" x="352.6" y="30" text-anchor="start">2 acks = W → ok</text>
+<line class="line" x1="430" y1="272" x2="478.79999999999995" y2="216"/>
+<polygon class="ink" points="478.8,216.0 468.8,220.6 475.6,226.5"/>
+<text class="ink small" x="441.52" y="244.6" text-anchor="end">get</text>
+<line class="line" x1="430" y1="272" x2="503.2" y2="160"/>
+<polygon class="ink" points="503.2,160.0 494.0,165.9 501.5,170.8"/>
+<line class="line" x1="515.4000000000001" y1="216" x2="576.4" y2="272"/>
+<polygon class="ink" points="576.4,272.0 572.1,261.9 566.0,268.6"/>
+<text class="ink small" x="544.75" y="230.6" text-anchor="start">v1</text>
+<line class="line" x1="527.6" y1="160" x2="625.2" y2="272"/>
+<polygon class="ink" points="625.2,272.0 622.0,261.5 615.2,267.4"/>
+<text class="ink small" x="564.88" y="188.6" text-anchor="start">v2</text>
+<line class="line" x1="649.6" y1="260" x2="649.6" y2="284"/>
+<text class="ink small strong" x="649.6" y="300" text-anchor="middle">newest = v2</text>
+</svg></div>
+<figcaption><b>Figure 9.2</b>Every write quorum overlaps every read quorum because W + R &gt; N. The read therefore reaches at least one replica holding v2 (here R2), even though R3 missed the write.</figcaption>
+</figure>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>N=3</span></span>
 <span class="line"><span>W=2</span></span>
 <span class="line"><span>R=2</span></span></code></pre>
@@ -840,4 +888,4 @@
   <strong>Next required step · Guided practice</strong>
   <a href="../guided-practice/">Start guided practice →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

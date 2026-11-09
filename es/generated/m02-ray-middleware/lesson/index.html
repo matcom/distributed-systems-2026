@@ -202,6 +202,38 @@
 <div class="sl-heading-wrapper level-h2"><h2 id="7-objectref-es-una-future-distribuida">7. ObjectRef es una future distribuida</h2><a class="sl-anchor-link" href="#7-objectref-es-una-future-distribuida"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «7. ObjectRef es una future distribuida»</span></a></div>
 <pre class="astro-code github-dark" tabindex="0" data-language="python" dir="ltr"><code><span class="line"><span class="t0">ref </span><span class="t2">=</span><span class="t0"> work.remote(data)</span></span></code></pre>
 <p>puede leerse como:</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 234" role="img" aria-labelledby="tb-m02-ray-middleware-est tb-m02-ray-middleware-esd"><title id="tb-m02-ray-middleware-est">Un ObjectRef es una future distribuida</title><desc id="tb-m02-ray-middleware-esd">El driver recibe una referencia de inmediato y sigue trabajando; el worker 1 cae a mitad de la task; el runtime la reejecuta en el worker 2; ray.get espera hasta que llega el resultado.</desc>
+<text class="ink lane" x="16" y="53">Driver</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="123">Worker 1</text>
+<line class="rule" x1="115" y1="118" x2="735" y2="118"/>
+<text class="ink lane" x="16" y="193">Worker 2</text>
+<line class="rule" x1="115" y1="188" x2="735" y2="188"/>
+<line class="line" x1="137.2" y1="48" x2="210.4" y2="118"/>
+<polygon class="ink" points="210.4,118.0 206.3,107.8 200.1,114.3"/>
+<text class="ink small" x="169.82" y="67.5" text-anchor="start">f.remote(x)</text>
+<rect class="band" x="155.5" y="40" width="286.7" height="16" rx="3"/>
+<text class="muted small" x="298.85" y="35" text-anchor="middle">el ref vuelve al instante; el driver sigue</text>
+<rect class="accent" x="210.4" y="114" width="121.99999999999997" height="8" rx="2" opacity=".55"/>
+<text class="muted small" x="271.4" y="140" text-anchor="middle">ejecuta f</text>
+<g class="crash"><circle class="alert" cx="344.6" cy="118" r="10"/><text x="344.6" y="122" text-anchor="middle">✕</text></g>
+<text class="alert small strong" x="344.6" y="102" text-anchor="middle">caída</text>
+<line class="line dash" x1="381.2" y1="48" x2="454.40000000000003" y2="188"/>
+<polygon class="ink" points="454.4,188.0 453.8,177.1 445.8,181.2"/>
+<text class="ink small" x="434.584" y="129.8" text-anchor="start">el runtime reintenta f</text>
+<rect class="accent" x="454.40000000000003" y="184" width="134.2" height="8" rx="2" opacity=".55"/>
+<text class="muted small" x="521.5" y="210" text-anchor="middle">ejecuta f otra vez</text>
+<line class="line" x1="466.6" y1="36" x2="466.6" y2="60"/>
+<text class="ink small strong" x="466.6" y="30" text-anchor="middle">ray.get(ref)</text>
+<rect class="band" x="466.6" y="40" width="195.19999999999993" height="16" rx="3"/>
+<text class="muted small" x="564.2" y="72" text-anchor="middle">bloqueado</text>
+<line class="line" x1="594.7" y1="188" x2="661.8" y2="48"/>
+<polygon class="ink" points="661.8,48.0 653.4,55.1 661.5,59.0"/>
+<text class="ink small" x="636.25" y="113" text-anchor="start">resultado</text>
+</svg></div>
+<figcaption><b>Figura 2.1</b>La llamada vuelve antes de que el trabajo se ejecute: un <code>ObjectRef</code> es una future. Si el Worker 1 muere a mitad de la task, el runtime ejecuta <code>f</code> de nuevo en el Worker 2; <code>f</code> puede ejecutarse dos veces, y también cualquier efecto lateral que tenga.</figcaption>
+</figure>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>ObjectRef</span></span>
 <span class="line"><span>   │</span></span>
 <span class="line"><span>   └── “valor producido por este trabajo remoto”</span></span></code></pre>
@@ -800,4 +832,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>

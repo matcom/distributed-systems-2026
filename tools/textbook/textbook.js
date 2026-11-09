@@ -59,3 +59,9 @@ if (next && 'IntersectionObserver' in window) {
 }
 
 refresh();
+
+// Remember this step so the home page can offer "Continue: …".
+try {
+  const h1 = document.querySelector('h1#_top'), step = document.querySelector('.tb-meta b');
+  if (h1) localStorage.setItem('tb:last:' + document.documentElement.lang, JSON.stringify({ href: location.pathname, title: h1.textContent.trim() + (step ? ' · ' + step.textContent.trim() : '') }));
+} catch {}

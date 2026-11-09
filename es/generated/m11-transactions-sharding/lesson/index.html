@@ -293,6 +293,36 @@
 <hr>
 <div class="sl-heading-wrapper level-h2"><h2 id="9-por-qué-2pc-puede-bloquear">9. Por qué 2PC puede bloquear</h2><a class="sl-anchor-link" href="#9-por-qué-2pc-puede-bloquear"><span aria-hidden="true" class="sl-anchor-icon ds-ico ds-i-anchor"></span><span class="sr-only" data-pagefind-ignore>Sección titulada «9. Por qué 2PC puede bloquear»</span></a></div>
 <p>Supón que ambos participantes votan YES.</p>
+<figure class="tb-figure"><div class="tb-scroll">
+<svg class="tb-svg" viewBox="0 0 760 250" role="img" aria-labelledby="tb-m11-transactions-sharding-est tb-m11-transactions-sharding-esd"><title id="tb-m11-transactions-sharding-est">Por qué two-phase commit puede bloquear</title><desc id="tb-m11-transactions-sharding-esd">Ambos shards votan SÍ y registran de forma durable el estado preparado; el coordinador cae antes de enviar la decisión; ambos shards esperan manteniendo los locks.</desc>
+<text class="ink lane" x="16" y="53">Coordinador</text>
+<line class="rule" x1="115" y1="48" x2="735" y2="48"/>
+<text class="ink lane" x="16" y="131">Shard A</text>
+<line class="rule" x1="115" y1="126" x2="735" y2="126"/>
+<text class="ink lane" x="16" y="209">Shard B</text>
+<line class="rule" x1="115" y1="204" x2="735" y2="204"/>
+<line class="line" x1="137.2" y1="48" x2="204.3" y2="126"/>
+<polygon class="ink" points="204.3,126.0 201.2,115.5 194.4,121.4"/>
+<text class="ink small" x="172.04" y="74.2" text-anchor="start">PREPARE</text>
+<line class="line" x1="149.4" y1="48" x2="234.8" y2="204"/>
+<polygon class="ink" points="234.8,204.0 233.9,193.1 226.1,197.4"/>
+<circle class="accent" cx="204.3" cy="126" r="5"/>
+<text class="accent strong small" x="250.3" y="147" text-anchor="middle">preparado, durable</text>
+<circle class="accent" cx="234.8" cy="204" r="5"/>
+<line class="line" x1="259.2" y1="126" x2="320.20000000000005" y2="48"/>
+<polygon class="ink" points="320.2,48.0 310.5,53.1 317.6,58.6"/>
+<text class="ink small" x="297.70000000000005" y="82" text-anchor="start">SÍ</text>
+<line class="line" x1="295.8" y1="204" x2="344.6" y2="48"/>
+<polygon class="ink" points="344.6,48.0 337.3,56.2 345.9,58.9"/>
+<g class="crash"><circle class="alert" cx="381.2" cy="48" r="10"/><text x="381.2" y="52" text-anchor="middle">✕</text></g>
+<text class="alert small strong" x="397.2" y="32" text-anchor="start">cae antes de decidir</text>
+<rect class="band" x="308" y="118" width="402.6" height="16" rx="3"/>
+<text class="muted small" x="509.3" y="113" text-anchor="middle">mantiene locks: no puede confirmar ni abortar solo</text>
+<rect class="band" x="320.20000000000005" y="196" width="390.4" height="16" rx="3"/>
+<text class="muted small" x="515.4000000000001" y="228" text-anchor="middle">bloqueado hasta que el coordinador se recupere</text>
+</svg></div>
+<figcaption><b>Figura 11.1</b>Ambos shards votaron SÍ y registraron esa promesa de forma durable. El coordinador cae antes de anunciar la decisión: ningún shard puede confirmar (el otro podría haber votado NO) ni abortar (el coordinador podría haber decidido COMMIT). Esperan, manteniendo los locks.</figcaption>
+</figure>
 <p>El coordinador cae antes de que conozcan la decisión final.</p>
 <p>A sabe:</p>
 <pre class="astro-code github-dark" tabindex="0" data-language="text" dir="ltr"><code><span class="line"><span>voté YES</span></span></code></pre>
@@ -759,4 +789,4 @@
   <strong>Siguiente paso obligatorio · Práctica guiada</strong>
   <a href="../guided-practice/">Comenzar práctica guiada →</a>
 </div>
-</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.VBrVxvkf.js"></script></body></html>
+</div><footer class="sl-flex astro-ddtxxk7k"><div class="meta sl-flex astro-ddtxxk7k"></div><div class="pagination-links print:hidden astro-b5raizh3" dir="ltr"></div></footer></div></div></main></div></div></div></div><script type="module" src="/distributed-systems-2026/_astro/ds.wxOoFUO7.js"></script><script type="module" src="/distributed-systems-2026/_astro/textbook.lNgDnarE.js"></script></body></html>
